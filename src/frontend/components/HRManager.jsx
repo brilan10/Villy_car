@@ -876,7 +876,7 @@ const HRManager = ({ companyId, addToast }) => {
 
               <div style={{ backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'white' }}>Descuento por Vales (Cuentas y Bebidas):</div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'white' }}>Descuento por Adelantos (Cuentas y Bebidas):</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Monto total acumulado (calculado automáticamente).</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -1331,7 +1331,7 @@ const HRManager = ({ companyId, addToast }) => {
                   )}
                   {showSlipModal.valeDeduction > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '0.85rem' }}>
-                      <span>ANTICIPOS Y VALES (TOTAL)</span>
+                      <span>ANTICIPOS Y ADELANTOS (TOTAL)</span>
                       <span>${showSlipModal.valeDeduction.toLocaleString('es-CL')}</span>
                     </div>
                   )}
