@@ -6,10 +6,10 @@ import 'jspdf-autotable';
 
 const getCompanyNames = (id) => {
   const names = { 
-    '1': 'Dwork', 
-    '2': 'Transportes', 
-    '3': 'J2 Publicidad', 
-    '4': 'Villy Car Tuning' 
+    '1': 'J2 Publicidad', 
+    '2': 'Dwork', 
+    '3': 'Villy Car Tuning', 
+    '4': 'Transportes J2' 
   };
   return names[id] || 'Empresa';
 };
@@ -245,7 +245,7 @@ const HRManager = ({ companyId, addToast }) => {
           .filter(a => a.tipo_entidad === 'trabajador' && a.rut === calcWorkerRut && a.estado === 'debe')
           .reduce((sum, a) => sum + (parseFloat(a.monto_total) - parseFloat(a.monto_pagado || 0)), 0);
           
-        setWorkerDebt(employeeDeuda + consumosDeuda);
+        setWorkerDebt(employeeDeuda);
       } catch (error) {
         console.error('Error fetching accounts debt:', error);
       }
@@ -308,8 +308,8 @@ const HRManager = ({ companyId, addToast }) => {
         .filter(a => a.tipo_entidad === 'trabajador' && a.rut === calcWorkerRut && a.estado === 'debe')
         .reduce((sum, a) => sum + (parseFloat(a.monto_total) - parseFloat(a.monto_pagado || 0)), 0);
 
-      setWorkerDebt(prestamosDeuda + bebidas);
-      addToast(`Se unificaron deudas: $${bebidas} en bebidas y $${prestamosDeuda} en préstamos.`, 'info');
+      setWorkerDebt(prestamosDeuda);
+      addToast(`Deudas calculadas: $${prestamosDeuda} (Bebidas registradas en POS: $${bebidas}). Nota: Para evitar duplicados, solo se suma el tablero de Cuentas.`, 'info');
     } catch (error) {
       addToast('Error al cargar deudas.', 'danger');
     }
