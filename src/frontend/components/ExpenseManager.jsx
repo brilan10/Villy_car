@@ -208,6 +208,14 @@ const ExpenseManager = ({ companyId, addToast }) => {
                     <option value="Insumos de Aseo">Insumos de Aseo</option>
                     <option value="Gastos Gerencia">Gastos Gerencia</option>
                     <option value="Combustible">Combustible</option>
+                    <option value="Reembolsos">Reembolsos</option>
+                    <option value="Otros Gastos">Otros Gastos</option>
+                    <option value="Adelanto de Sueldo">Adelanto de Sueldo</option>
+                    <option value="Sueldos">Sueldos</option>
+                    <option value="Previred">Previred</option>
+                    <option value="IVA/PPM">IVA/PPM</option>
+                    <option value="FLETES">FLETES</option>
+                    <option value="GASTOS COMUNES">GASTOS COMUNES</option>
                   </>
                 )}
               </select>

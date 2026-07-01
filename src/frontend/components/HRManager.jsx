@@ -45,6 +45,7 @@ const HRManager = ({ companyId, addToast }) => {
   // Consumo Bebidas
   const [consumoWorkerId, setConsumoWorkerId] = useState('');
   const [consumoMonto, setConsumoMonto] = useState('');
+  const [consumoTipo, setConsumoTipo] = useState('Bebida consumida');
   const [consumosList, setConsumosList] = useState([]);
   
   // Historial
@@ -284,7 +285,7 @@ const HRManager = ({ companyId, addToast }) => {
       await registerConsumo(companyId, {
         trabajador_id: consumoWorkerId,
         monto: consumoMonto,
-        descripcion: 'Bebida consumida'
+        descripcion: consumoTipo
       });
       addToast('Consumo registrado exitosamente.', 'success');
       setConsumoMonto('');
@@ -749,9 +750,18 @@ const HRManager = ({ companyId, addToast }) => {
                   ))}
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Monto de Bebida ($)</label>
-                <input type="number" min="1" value={consumoMonto} onChange={e => setConsumoMonto(e.target.value)} style={{ width: '100%' }} placeholder="Ej: 1500" />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Tipo de Consumo</label>
+                  <select value={consumoTipo} onChange={e => setConsumoTipo(e.target.value)} style={{ width: '100%' }}>
+                    <option value="Bebida consumida">Bebida</option>
+                    <option value="Insumo consumido">Insumo / Bodega</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Monto ($)</label>
+                  <input type="number" min="1" value={consumoMonto} onChange={e => setConsumoMonto(e.target.value)} style={{ width: '100%' }} placeholder="Ej: 1500" />
+                </div>
               </div>
               <button type="submit" className="btn-success" disabled={!consumoWorkerId || !consumoMonto}>Registrar Consumo</button>
             </form>
