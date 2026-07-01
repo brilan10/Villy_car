@@ -22,11 +22,11 @@ if ($isLocalhost) {
     $user = 'root'; 
     $pass = ''; 
 } else {
-    // Credenciales WebHost Chile (Reemplaza los valores con los correctos de tu cPanel)
-    $host = 'localhost'; // En WebHost suele ser localhost
-    $db   = 'brilan10_villycar'; // Ejemplo de nombre de BD en WebHost
-    $user = 'brilan10_admin'; // Ejemplo de usuario
-    $pass = 'TuContraseñaSegura123!'; // La contraseña que usaste en WebHost
+    // Credenciales WebHost Chile
+    $host = 'localhost'; 
+    $db   = 'villycar_base_de_datos'; // o 'villycar_base de datos'
+    $user = 'villycar_joel'; 
+    $pass = 'abc.123.vilycar'; 
 }
 
 $charset = 'utf8mb4';
