@@ -1,0 +1,3 @@
+Base de Datos: villycar_base de datos
+Usuario: villycar_joel
+Contraseña: abc.123.vilycar

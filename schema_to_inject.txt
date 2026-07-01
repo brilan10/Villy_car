@@ -1,0 +1,84 @@
+DROP TABLE IF EXISTS agendas;
+CREATE TABLE `agendas` (
+  `id` int(11) NOT NULL,
+  `empresa_id` int(11) NOT NULL,
+  `titulo` varchar(150) NOT NULL,
+  `cliente` varchar(150) DEFAULT NULL,
+  `fecha` date NOT NULL,
+  `hora` time NOT NULL,
+  `tipo` varchar(50) DEFAULT NULL,
+  `monto` decimal(12,2) DEFAULT NULL,
+  `detalles` text DEFAULT NULL,
+  `estado` varchar(50) DEFAULT NULL,
+  `trabajador` varchar(150) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `empresa_derivada_id` int(11) DEFAULT NULL,
+  `cliente_email` varchar(100) DEFAULT NULL,
+  `alerta_enviada` tinyint(1) DEFAULT 0,
+  `estado_pago` varchar(50) DEFAULT 'pendiente'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+DROP TABLE IF EXISTS anexos_trabajador;
+CREATE TABLE `anexos_trabajador` (
+  `id` int(11) NOT NULL,
+  `empresa_id` int(11) NOT NULL,
+  `trabajador_id` int(11) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `sueldo_base_nuevo` decimal(10,2) DEFAULT NULL,
+  `detalle` text DEFAULT NULL,
+  `archivo_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+DROP TABLE IF EXISTS cotizaciones;
+CREATE TABLE `cotizaciones` (
+  `id` int(11) NOT NULL,
+  `empresa_id` int(11) NOT NULL,
+  `cliente` varchar(255) DEFAULT NULL,
+  `rut` varchar(50) DEFAULT NULL,
+  `telefono` varchar(50) DEFAULT NULL,
+  `descripcion_proyecto` text DEFAULT NULL,
+  `items_json` longtext DEFAULT NULL,
+  `subtotal` decimal(10,2) DEFAULT 0.00,
+  `iva` decimal(10,2) DEFAULT 0.00,
+  `total` decimal(10,2) DEFAULT 0.00,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS estados_pago_rrhh;
+CREATE TABLE `estados_pago_rrhh` (
+  `id` int(11) NOT NULL,
+  `empresa_id` int(11) NOT NULL,
+  `trabajador_id` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `monto_total` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `descripcion_servicios` text DEFAULT NULL,
+  `archivo_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+DROP TABLE IF EXISTS ordenes_trabajo;
+CREATE TABLE `ordenes_trabajo` (
+  `id` int(11) NOT NULL,
+  `empresa_id` int(11) NOT NULL,
+  `cliente_nombre` varchar(150) NOT NULL,
+  `cliente_telefono` varchar(50) DEFAULT NULL,
+  `vehiculo_patente` varchar(50) DEFAULT NULL,
+  `vehiculo_modelo` varchar(100) DEFAULT NULL,
+  `problema_reportado` text NOT NULL,
+  `estado` varchar(50) DEFAULT 'ingresado',
+  `total_estimado` decimal(12,2) DEFAULT 0.00,
+  `fecha_ingreso` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha_entrega` timestamp NULL DEFAULT NULL,
+  `area_asignada` varchar(50) DEFAULT 'Ambas',
+  `archivos` text DEFAULT NULL,
+  `empresa_derivada_id` int(11) DEFAULT NULL,
+  `trabajador_asignado` varchar(150) DEFAULT NULL,
+  `estado_pago` varchar(50) DEFAULT 'pendiente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS detalles_orden_trabajo;
+CREATE TABLE `detalles_orden_trabajo` (
+  `id` int(11) NOT NULL,
+  `orden_id` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `tipo` enum('servicio','repuesto') NOT NULL DEFAULT 'servicio',
+  `cantidad` int(11) NOT NULL DEFAULT 1,
+  `precio_unitario` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `subtotal` decimal(12,2) NOT NULL DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

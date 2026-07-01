@@ -1,0 +1,385 @@
+<USER_REQUEST>
+tengo algunos problemas ahorita mira, esto me lo comento el cliente , te comento , la cotizacion no deja imprimir o descargarla, el reporte ejecutivo al momente de generar un reporte sul o coloca fechas personalizadas sige expresando meeses , no lanza ningun detalle, lo hace todo mensual , algunas ordenes no se pueden mover, y eso de comisiones j2 publicidad joel, sacalo es mejor no mostrarlo , corrigeme esas cosas, es puro backend cierto ?
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:21:06-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 1
+Other open documents:
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\prepare_deploy_alt.ps1 (LANGUAGE_POWERSHELL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\accounts.php (LANGUAGE_PHP)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\frontend\App.jsx (LANGUAGE_JAVASCRIPT)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\upload_document.php (LANGUAGE_PHP)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\generate_compact_seed.py (LANGUAGE_PYTHON)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+---
+<USER_REQUEST>
+tampoco deja eliminar cotizaaciones 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:23:57-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 1
+Other open documents:
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\consumo.php (LANGUAGE_PHP)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\extract_excel.py (LANGUAGE_PYTHON)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\frontend\components\PointOfSale.jsx (LANGUAGE_JAVASCRIPT)
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\fix_encoding.php (LANGUAGE_PHP)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 59s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+no muesta el archvo local los datos de la bd
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:29:54-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 56
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\quotes.php (LANGUAGE_PHP)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 6m56s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+mira 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:32:06-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\quotes.php (LANGUAGE_PHP)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 9m8s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+es el local que no deja ver los datos 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:43:16-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\quotes.php (LANGUAGE_PHP)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 20m18s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+ahi si otra cosa  en ese apartado egresos e ingresos apicame filtros para poder filtrar, por categoriaa , descripcion y algun otro que sea util porfa
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:47:02-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\quotes.php (LANGUAGE_PHP)
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 24m3s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+los dos primero botones no funconan , el descargar ye l ver
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:51:54-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\src\backend\api\quotes.php (LANGUAGE_PHP)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 28m56s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+segun lo que te dije que arregles hoy dejando de lado que no mostraba datos, que cosas eran para hacer chek list para revisar
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T17:56:46-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 33m48s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+al eliminar cotizacion que lka alerta se vea bonita, eso de tareas pendiente corrigelo de una
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T18:50:16-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 1h27m18s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+se me ollvido decirte, @[c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql],IMPLEMENTA ESO EN LA LOCAL Y BORRA LOS DATOS EXITESTENTES Y REEMPLAZALOS POR ESO QUE ES LA REAL
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:05:54-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 1h42m56s)
+
+The user has mentioned some items in the form @[ITEM]. Here is extra information about the items that were mentioned by the user, in the order that they appear:
+
+@[c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql] is a [File]:
+c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+esta bueno, ahora dejame solo ene le escriotior los arcxhivos para actualizar el de hosting web, rejcuerda que tiene otros datos paral a bd
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:11:25-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 1h48m27s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+corrigeme eso , lo mismo de antes, en finanzas al seleccionar cualquiera de loa ingresos acumilado , egresos, caja neta etc la pestaña flotante se va a sta abajo, dejala aliniada arriba, que quede arriba 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:13:03-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 1h50m5s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+ojo con esto mira coloca arriba filtro, para mostrar por pagar o por cobrar, agretga el filtro ahi, esta desordenadao eso
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:16:12-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 1h53m14s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+ahora si npm builld y dejame en e escirotio lo necesario para actualizar la app de villy car, por cierto villy car es con V asique lo corriges de paso
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:21:44-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 1h58m46s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+borrame las carpetas del escriotior quue no voy a ocupar 
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:26:02-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h3m4s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+verificaste que los datos de la bd sean los correcxtos,m recuerda que son distintos que la del local
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:28:53-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h5m55s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+error al cargar datos analitica en el hosting
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:33:56-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h10m58s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+no cargan los datos de la bd
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:35:22-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h12m23s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+dame el programa completo jajaja, lo borre
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:37:45-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h14m46s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+no cargan los datros de la bd en hosting seguro quue esta todo, hasta el .htacces algo asi?
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:49:36-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h26m37s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+puedes hacerlo tu y me dices que es para resubirlo
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:51:28-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h28m30s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+si te di los parametros no jodas ponlo
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:52:57-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h29m58s)
+</ADDITIONAL_METADATA>
+---
+<USER_REQUEST>
+buscalos , yo te pase las credenciales de la base de datos del hostnign y rellenalas no quiero volver a decirlo
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-29T19:53:46-04:00.
+
+The user's current state is as follows:
+Active Document: c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+Cursor is on line: 145
+Other open documents:
+- c:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND\Semilla_Dashboard_Real.sql (LANGUAGE_SQL)
+- c:\Users\yomiy\Documents\Proyectos\Villy Car\upgrade_software.md (LANGUAGE_MARKDOWN)
+Running terminal commands:
+- npm start (in c:\Users\yomiy\Documents\Proyectos\Villy Car, running for 2h30m47s)
+</ADDITIONAL_METADATA>
+---
