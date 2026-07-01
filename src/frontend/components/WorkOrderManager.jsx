@@ -245,6 +245,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
 
     return passArea && passService &&
       (
+        searchTerm.trim() === '' ||
         (ord.cliente_nombre && ord.cliente_nombre.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (ord.vehiculo_patente && ord.vehiculo_patente.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (ord.problema_reportado && ord.problema_reportado.toLowerCase().includes(searchTerm.toLowerCase()))
