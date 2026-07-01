@@ -1,0 +1,25 @@
+========================================================================
+       INSTRUCCIONES DE DESPLIEGUE - VILLY CAR A WEBHOST CHILE
+========================================================================
+
+1. LA CARPETA "webhost_deploy":
+Esta carpeta contiene el formato EXACTO de "llegar y subir" a tu servidor
+de WebHost Chile. Todo lo que esté aquí adentro ya fue procesado y está listo
+para producción.
+
+2. CÓMO FUNCIONA EL SCRIPT AUTOMÁTICO (build_for_webhost.ps1):
+Cuando se ejecuta el script de construcción, el sistema hace lo siguiente:
+- Compila el Frontend (React/Vite) para que quede optimizado.
+- Crea la carpeta "backend" y copia todos los archivos PHP allí adentro.
+- Configura de manera automática las credenciales en db.php para que coincidan 
+  con las de Hostinger (villycar_joel, abc.123.vilycar, villycar_base de datos).
+- Genera el archivo .htaccess para que la navegación de la página funcione.
+
+3. CÓMO SUBIR AL HOSTING:
+a) Entra a tu panel de Hostinger / WebHost Chile.
+b) Ve al Administrador de Archivos (File Manager) -> public_html.
+c) Borra los archivos antiguos (si es necesario).
+d) Entra a la carpeta "webhost_deploy" de este proyecto y Sube TODO el contenido.
+   (Nota: sube lo que está DENTRO de la carpeta, no la carpeta en sí).
+
+¡Con eso tu sistema quedará 100% actualizado en vivo!
