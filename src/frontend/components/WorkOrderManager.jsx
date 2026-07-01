@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Plus, Search, Calendar, User, Tag, ArrowRight, ArrowLeft, CheckCircle2, Clock, Edit } from 'lucide-react';
-import { getWorkOrders, createWorkOrder, updateWorkOrder, getWorkers } from '../services/api';
+import { Plus, Search, Calendar, User, Tag, ArrowRight, ArrowLeft, CheckCircle2, Clock, Edit, Trash2 } from 'lucide-react';
+import { getWorkOrders, createWorkOrder, updateWorkOrder, deleteWorkOrder, getWorkers } from '../services/api';
 import { UserContext } from '../App';
 
 const WorkOrderManager = ({ companyId, addToast }) => {
@@ -24,9 +24,8 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [newPatent, setNewPatent] = useState('');
   const [newModel, setNewModel] = useState('');
   const [newProblem, setNewProblem] = useState('');
-  const [newArea, setNewArea] = useState('Ambas');
   const [newFiles, setNewFiles] = useState([]);
-  const [derivedCompany, setDerivedCompany] = useState('');
+  const [newWorker, setNewWorker] = useState('');
 
   const getLabels = () => {
     switch (companyId) {
@@ -44,7 +43,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     try {
       const data = await getWorkOrders(companyId);
       setOrders(data);
-      const workersData = await getWorkers(companyId);
+      const workersData = await getWorkers(companyId, false, true);
       setWorkers(workersData.filter(w => w.rol === 'trabajador'));
     } catch (error) {
       addToast('Error al cargar datos: ' + error.message, 'danger');
@@ -123,16 +122,24 @@ const WorkOrderManager = ({ companyId, addToast }) => {
         }
       }
 
+      let targetCompanyId = null;
+      if (newWorker) {
+        const workerObj = workers.find(w => w.nombre === newWorker);
+        if (workerObj && workerObj.empresa_id && workerObj.empresa_id != companyId) {
+          targetCompanyId = workerObj.empresa_id;
+        }
+      }
+
       await createWorkOrder(companyId, {
         cliente_nombre: newClient,
         cliente_telefono: newPhone,
         vehiculo_patente: newPatent,
         vehiculo_modelo: newModel,
         problema_reportado: newProblem,
-        area_asignada: newArea,
         archivos: archivosUrls,
-        empresa_derivada_id: derivedCompany ? parseInt(derivedCompany) : null,
-        estado: 'ingresado', // Estado inicial
+        empresa_derivada_id: targetCompanyId,
+        trabajador_asignado: newWorker || null,
+        estado: 'ingresado',
         porcentaje_avance: 0
       });
       addToast('Orden creada exitosamente.', 'success');
@@ -142,9 +149,8 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       setNewPatent('');
       setNewModel('');
       setNewProblem('');
-      setNewArea('Ambas');
       setNewFiles([]);
-      setDerivedCompany('');
+      setNewWorker('');
       loadData();
     } catch (error) {
       addToast('Error al crear orden: ' + error.message, 'danger');
@@ -160,6 +166,18 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       loadData();
     } catch (error) {
       addToast('Error al actualizar orden: ' + error.message, 'danger');
+    }
+  };
+
+  const handleDeleteOrder = async (id) => {
+    if(window.confirm('¿Estás seguro de que deseas eliminar esta orden?')) {
+      try {
+        await deleteWorkOrder(companyId, id);
+        addToast('Orden eliminada exitosamente.', 'success');
+        loadData();
+      } catch(error) {
+        addToast('Error al eliminar orden: ' + error.message, 'danger');
+      }
     }
   };
 
@@ -259,9 +277,9 @@ const WorkOrderManager = ({ companyId, addToast }) => {
               </div>
 
               <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'white', margin: '4px 0 0 0' }}>{ord.problema_reportado}</h4>
-              {ord.area_asignada && (
+              {ord.trabajador_asignado && (
                 <span style={{ fontSize: '0.65rem', backgroundColor: 'var(--bg-main)', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--text-main)', marginTop: '4px', display: 'inline-block', width: 'fit-content' }}>
-                  Área: {ord.area_asignada}
+                  Colaborador: {ord.trabajador_asignado}
                 </span>
               )}
 
@@ -323,9 +341,14 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button onClick={() => setShowBitacoraModal(ord)} style={{ padding: '4px 8px', borderRadius: '4px', backgroundColor: 'var(--accent)', color: 'white', fontSize: '0.75rem', fontWeight: 600 }}>Ver Detalle</button>
                   {!isWorker && (
-                    <button onClick={() => setEditingOrder(ord)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'var(--text-main)' }}>
-                      <Edit size={14} />
-                    </button>
+                    <>
+                      <button onClick={() => setEditingOrder(ord)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'var(--text-main)' }} title="Editar">
+                        <Edit size={14} />
+                      </button>
+                      <button onClick={() => handleDeleteOrder(ord.id)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--danger)', color: 'var(--danger)' }} title="Eliminar">
+                        <Trash2 size={14} />
+                      </button>
+                    </>
                   )}
                 </div>
                 {!isWorker ? (
@@ -452,13 +475,12 @@ const WorkOrderManager = ({ companyId, addToast }) => {
               <input type="file" multiple onChange={e => setNewFiles(Array.from(e.target.files))} style={{ width: '100%', color: 'white' }} />
             </div>
             <div style={{ gridColumn: '1 / -1' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Trabajo Interno / Derivar a otra empresa</label>
-              <select value={derivedCompany} onChange={e => setDerivedCompany(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }}>
-                <option value="">No derivar (Trabajo propio)</option>
-                <option value="1">Derivar a Dwork (Construcción y Soldadura)</option>
-                <option value="2">Derivar a Transportes Villy Car (Logística)</option>
-                <option value="3">Derivar a J2 Publicidad (Gráfica y Letreros)</option>
-                <option value="4">Derivar a Villy Car Tuning (Estética Vehicular)</option>
+              <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Colaborador Asignado</label>
+              <select value={newWorker} onChange={e => setNewWorker(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }}>
+                <option value="">-- Sin Asignar --</option>
+                {workers.map(w => (
+                  <option key={w.id} value={w.nombre}>{w.nombre} ({w.cargo || 'Trabajador'}) - {w.empresa_id == 1 ? 'J2' : w.empresa_id == 2 ? 'Dwork' : w.empresa_id == 3 ? 'VillyCar' : 'Transp.'}</option>
+                ))}
               </select>
             </div>
             <div style={{ gridColumn: '1 / -1' }}>
@@ -494,11 +516,12 @@ const WorkOrderManager = ({ companyId, addToast }) => {
               <input type="text" value={editingOrder.vehiculo_modelo || ''} onChange={e => setEditingOrder({...editingOrder, vehiculo_modelo: e.target.value})} style={{ width: '100%' }} />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Área Asignada *</label>
-              <select value={editingOrder.area_asignada || 'Ambas'} onChange={e => setEditingOrder({...editingOrder, area_asignada: e.target.value})} required style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }}>
-                <option value="Ambas">Ambas (Diseño y Producción)</option>
-                <option value="Diseño">Solo Diseño</option>
-                <option value="Producción">Solo Producción</option>
+              <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Colaborador Asignado</label>
+              <select value={editingOrder.trabajador_asignado || ''} onChange={e => setEditingOrder({...editingOrder, trabajador_asignado: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }}>
+                <option value="">-- Sin Asignar --</option>
+                {workers.map(w => (
+                  <option key={w.id} value={w.nombre}>{w.nombre} ({w.cargo || 'Trabajador'})</option>
+                ))}
               </select>
             </div>
             <div style={{ gridColumn: '1 / -1' }}>

@@ -3,11 +3,9 @@ require_once 'db.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-try {
-    $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN estado_pago VARCHAR(50) DEFAULT 'pendiente'");
-    $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN bitacora JSON DEFAULT NULL");
-    $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN porcentaje_avance INT DEFAULT 0");
-} catch (PDOException $e) {}
+try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN estado_pago VARCHAR(50) DEFAULT 'pendiente'"); } catch (PDOException $e) {}
+try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN bitacora JSON DEFAULT NULL"); } catch (PDOException $e) {}
+try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN porcentaje_avance INT DEFAULT 0"); } catch (PDOException $e) {}
 
 if (!$empresa_id) {
     responseJson(["error" => "empresa_id es requerido"], 400);
@@ -96,16 +94,11 @@ switch ($method) {
         $fecha_ingreso = $inputData['fecha_ingreso'] ?? date('Y-m-d H:i:s');
         $estado_pago = $inputData['estado_pago'] ?? 'pendiente';
 
+        $target_empresa_id = $empresa_derivada_id ? $empresa_derivada_id : $empresa_id;
         $stmt = $pdo->prepare("INSERT INTO ordenes_trabajo (empresa_id, cliente_nombre, cliente_telefono, vehiculo_patente, vehiculo_modelo, problema_reportado, estado, area_asignada, archivos, empresa_derivada_id, trabajador_asignado, fecha_ingreso, estado_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$empresa_id, $cliente_nombre, $cliente_telefono, $vehiculo_patente, $vehiculo_modelo, $problema_reportado, $estado, $area_asignada, $archivos, $empresa_derivada_id, $trabajador_asignado, $fecha_ingreso, $estado_pago]);
+        $stmt->execute([$target_empresa_id, $cliente_nombre, $cliente_telefono, $vehiculo_patente, $vehiculo_modelo, $problema_reportado, $estado, $area_asignada, $archivos, $empresa_derivada_id, $trabajador_asignado, $fecha_ingreso, $estado_pago]);
         
         $newId = $pdo->lastInsertId();
-        
-        // Si se derivó a otra empresa, crear un duplicado de la orden para la empresa destino
-        if ($empresa_derivada_id) {
-            $stmtD = $pdo->prepare("INSERT INTO ordenes_trabajo (empresa_id, cliente_nombre, cliente_telefono, vehiculo_patente, vehiculo_modelo, problema_reportado, estado, area_asignada, archivos, trabajador_asignado, fecha_ingreso, estado_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmtD->execute([$empresa_derivada_id, "Derivado por Empresa $empresa_id: $cliente_nombre", $cliente_telefono, $vehiculo_patente, $vehiculo_modelo, $problema_reportado, 'ingresado', $area_asignada, $archivos, $trabajador_asignado, $fecha_ingreso, $estado_pago]);
-        }
         
         responseJson(["success" => true, "id" => $newId], 201);
         break;

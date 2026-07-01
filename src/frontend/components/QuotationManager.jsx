@@ -13,6 +13,7 @@ const QuotationManager = ({ companyId, addToast }) => {
   const [productSearchTerm, setProductSearchTerm] = useState('');
   const [isProductSearchFocused, setIsProductSearchFocused] = useState(false);
   const [filterCompany, setFilterCompany] = useState(companyId);
+  const [searchTerm, setSearchTerm] = useState('');
   
   const [currentQuote, setCurrentQuote] = useState({
     id: null,
@@ -147,15 +148,29 @@ const QuotationManager = ({ companyId, addToast }) => {
 
   const getCompanyInfo = (id) => {
     switch (parseInt(id)) {
-      case 1: return { name: 'J2 PUBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', giro: 'Producción Gráfica', cuenta: 'Solicitar por email' };
-      case 2: return { name: 'DWORK SPA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', giro: 'Servicios', cuenta: 'Solicitar por email' };
-      case 3: return { name: 'VILLY CAR SPA', rut: '78.263.871-8', email: 'contacto@villycar.cl', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'SERVICIOS AUTOMOTRICES', giro: 'Taller Mecánico', cuenta: 'Solicitar por email' };
-      case 4: return { name: 'TRANSPORTES Y TURISMOS J2 SPA', rut: '78.406.906-0', email: 'contacto@j2publicidad.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', giro: 'Transporte', cuenta: 'Solicitar por email' };
-      default: return { name: 'EMPRESA', rut: '1.111.111-1', email: 'contacto@empresa.com', phone: '', address: '', subtitle: '', giro: '', cuenta: '' };
+      case 1: return { name: 'J2 PUBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', giro: 'Producción Gráfica', cuenta: 'Solicitar por email', logoUrl: '/logo.jpg' };
+      case 2: return { name: 'DWORK SPA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', giro: 'Servicios', cuenta: 'Solicitar por email', logoUrl: null };
+      case 3: return { name: 'VILLY CAR SPA', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: '', giro: 'Taller Mecánico', cuenta: 'Solicitar por email', logoUrl: '/Logo Villy Car.jpg' };
+      case 4: return { name: 'TRANSPORTES Y TURISMOS J2 SPA', rut: '78.406.906-0', email: 'contacto@j2publicidad.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', giro: 'Transporte', cuenta: 'Solicitar por email', logoUrl: null };
+      default: return { name: 'EMPRESA', rut: '1.111.111-1', email: 'contacto@empresa.com', phone: '', address: '', subtitle: '', giro: '', cuenta: '', logoUrl: null };
     }
   };
 
-  const generatePDF = (quote) => {
+  const getLogoBase64 = async (url) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch(e) {
+      return null;
+    }
+  };
+
+  const generatePDF = async (quote) => {
     try {
       const doc = new jsPDF();
       const currentCompanyId = quote.empresa_id ? quote.empresa_id : companyId;
@@ -185,15 +200,29 @@ const QuotationManager = ({ companyId, addToast }) => {
       doc.text(`${companyInfo.address}`, 14, 47);
 
       // Top Right - Company Logo / Info
-      doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
-      doc.setFontSize(20);
-      doc.setFont('helvetica', 'bold');
-      doc.text(companyInfo.name, 196, 25, { align: 'right' });
+      if (companyInfo.logoUrl) {
+        const base64Logo = await getLogoBase64(companyInfo.logoUrl);
+        if (base64Logo) {
+          doc.addImage(base64Logo, 'JPEG', 166, 10, 35, 15);
+        } else {
+          doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
+          doc.setFontSize(20);
+          doc.setFont('helvetica', 'bold');
+          doc.text(companyInfo.name, 196, 25, { align: 'right' });
+        }
+      } else {
+        doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
+        doc.setFontSize(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text(companyInfo.name, 196, 25, { align: 'right' });
+      }
       
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(100, 100, 100);
-      doc.text(companyInfo.subtitle, 196, 32, { align: 'right' });
+      if (companyInfo.subtitle) {
+        doc.text(companyInfo.subtitle, 196, 32, { align: 'right' });
+      }
 
       // Invoice Number
       doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
@@ -331,19 +360,30 @@ const QuotationManager = ({ companyId, addToast }) => {
         <div>
           <h1 className="title-lg" style={{ marginBottom: 0 }}>Registro de Cotizaciones</h1>
           <p style={{ color: 'var(--text-muted)' }}>Historial de cotizaciones emitidas a clientes.</p>
-          <div style={{ marginTop: '16px' }}>
-            <label style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginRight: '8px' }}>Filtrar por empresa:</label>
-            <select 
-              value={filterCompany} 
-              onChange={e => setFilterCompany(e.target.value)}
-              style={{ padding: '8px', borderRadius: '8px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-main)', outline: 'none', cursor: 'pointer' }}
-            >
-              <option value="all">Mostrar Todas</option>
-              <option value="1">J2 Publicidad</option>
-              <option value="2">Dwork SpA</option>
-              <option value="3">Villy Car Spa</option>
-              <option value="4">Transportes J2</option>
-            </select>
+          <div style={{ marginTop: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div>
+              <label style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginRight: '8px' }}>Filtrar por empresa:</label>
+              <select 
+                value={filterCompany} 
+                onChange={e => setFilterCompany(e.target.value)}
+                style={{ padding: '8px', borderRadius: '8px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-main)', outline: 'none', cursor: 'pointer' }}
+              >
+                <option value="all">Mostrar Todas</option>
+                <option value="1">J2 Publicidad</option>
+                <option value="2">Dwork SpA</option>
+                <option value="3">Villy Car Spa</option>
+                <option value="4">Transportes J2</option>
+              </select>
+            </div>
+            <div>
+              <input 
+                type="text" 
+                placeholder="Buscar por cliente, N°, RUT..." 
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ padding: '8px', borderRadius: '8px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-main)', outline: 'none', minWidth: '250px' }}
+              />
+            </div>
           </div>
         </div>
         <button className="btn-primary" onClick={() => handleOpenModal()}>
@@ -370,7 +410,17 @@ const QuotationManager = ({ companyId, addToast }) => {
                 </tr>
               </thead>
               <tbody>
-                {quotes.map(q => (
+                {quotes
+                  .filter(q => {
+                    if (!searchTerm) return true;
+                    const term = searchTerm.toLowerCase();
+                    return (
+                      (q.cliente && q.cliente.toLowerCase().includes(term)) ||
+                      (q.rut && q.rut.toLowerCase().includes(term)) ||
+                      (q.id && q.id.toString().includes(term))
+                    );
+                  })
+                  .map(q => (
                   <tr key={q.id} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '12px' }}>{q.id}</td>
                     <td style={{ padding: '12px' }}>{new Date(q.fecha).toLocaleDateString()}</td>

@@ -206,12 +206,19 @@ if ($action === 'toggle_status') {
 switch ($method) {
     case 'GET':
         $all = isset($_GET['all']) ? (int)$_GET['all'] : 0;
-        if ($all) {
+        $all_companies = isset($_GET['all_companies']) ? (int)$_GET['all_companies'] : 0;
+        
+        if ($all_companies) {
+            $stmt = $pdo->prepare("SELECT * FROM trabajadores");
+            $stmt->execute();
+        } else if ($all) {
             $stmt = $pdo->prepare("SELECT * FROM trabajadores WHERE empresa_id = ?");
+            $stmt->execute([$empresa_id]);
         } else {
             $stmt = $pdo->prepare("SELECT * FROM trabajadores WHERE empresa_id = ? AND activo = TRUE");
+            $stmt->execute([$empresa_id]);
         }
-        $stmt->execute([$empresa_id]);
+        
         responseJson($stmt->fetchAll());
         break;
 

@@ -38,7 +38,7 @@ export const updateClient = (companyId, data) => fetchAPI(`/clients.php?empresa_
 export const deleteClient = (companyId, id) => fetchAPI(`/clients.php?empresa_id=${companyId}&id=${id}`, { method: 'DELETE' });
 
 // RRHH y Trabajadores
-export const getWorkers = (companyId, all = false) => fetchAPI(`/workers.php?empresa_id=${companyId}${all ? '&all=1' : ''}`);
+export const getWorkers = (companyId, all = false, allCompanies = false) => fetchAPI(`/workers.php?empresa_id=${companyId}${all ? '&all=1' : ''}${allCompanies ? '&all_companies=1' : ''}`);
 export const createWorker = (companyId, data) => fetchAPI(`/workers.php?empresa_id=${companyId}`, { method: 'POST', body: JSON.stringify(data) });
 export const updateWorker = (companyId, data) => fetchAPI(`/workers.php?empresa_id=${companyId}`, { method: 'PUT', body: JSON.stringify(data) });
 export const deleteWorker = (companyId, id) => fetchAPI(`/workers.php?empresa_id=${companyId}&id=${id}`, { method: 'DELETE' });
@@ -111,6 +111,7 @@ export const saveCashClosure = (companyId, data) => fetchAPI(`/finances.php?acti
 export const getWorkOrders = (companyId) => fetchAPI(`/workorders.php?empresa_id=${companyId}`);
 export const createWorkOrder = (companyId, data) => fetchAPI(`/workorders.php?empresa_id=${companyId}`, { method: 'POST', body: JSON.stringify(data) });
 export const updateWorkOrder = (companyId, data) => fetchAPI(`/workorders.php?empresa_id=${companyId}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteWorkOrder = (companyId, id) => fetchAPI(`/workorders.php?empresa_id=${companyId}&id=${id}`, { method: 'DELETE' });
 
 // Agendas / Calendario
 export const getAgendas = (companyId) => fetchAPI(`/agendas.php?empresa_id=${companyId}`);

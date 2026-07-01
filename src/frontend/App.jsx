@@ -28,7 +28,15 @@ function App() {
     return (saved && saved !== 'undefined' && saved !== 'null') ? saved : '1';
   });
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem('villy_car_tab') || 'dashboard';
+    const savedTab = localStorage.getItem('villy_car_tab');
+    const savedUserStr = localStorage.getItem('villy_car_user');
+    let savedUser = null;
+    try { savedUser = JSON.parse(savedUserStr); } catch(e){}
+    
+    if (savedUser && savedUser.rol === 'trabajador' && (!savedTab || savedTab === 'dashboard' || savedTab === 'settings' || savedTab === 'accounts' || savedTab === 'analytics')) {
+      return 'workorders';
+    }
+    return savedTab || 'dashboard';
   });
 
   const [toasts, setToasts] = useState([]);
@@ -66,6 +74,11 @@ function App() {
       setCurrentCompany(user.empresa_id.toString());
     } else {
       setCurrentCompany('1');
+    }
+    if (user.rol === 'trabajador') {
+      setActiveTab('workorders');
+    } else {
+      setActiveTab('dashboard');
     }
   };
 
