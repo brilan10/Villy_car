@@ -9,6 +9,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('Todos');
+  const [serviceFilter, setServiceFilter] = useState('Todos');
   const [dateFilter, setDateFilter] = useState('todas'); // 'hoy' o 'todas'
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
@@ -26,6 +27,12 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [newProblem, setNewProblem] = useState('');
   const [newFiles, setNewFiles] = useState([]);
   const [newWorker, setNewWorker] = useState('');
+  const [newArea, setNewArea] = useState('Ambas');
+
+  // Custom Dropdown states
+  const [showModelDropdown, setShowModelDropdown] = useState(false);
+  const [showEditModelDropdown, setShowEditModelDropdown] = useState(false);
+  const modelOptions = ["Servicio", "Diseño", "Impresión", "Instalación", "Corte"];
 
   const getLabels = () => {
     switch (companyId) {
@@ -139,6 +146,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
         archivos: archivosUrls,
         empresa_derivada_id: targetCompanyId,
         trabajador_asignado: newWorker || null,
+        area_asignada: newArea,
         estado: 'ingresado',
         porcentaje_avance: 0
       });
@@ -151,6 +159,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       setNewProblem('');
       setNewFiles([]);
       setNewWorker('');
+      setNewArea('Ambas');
       loadData();
     } catch (error) {
       addToast('Error al crear orden: ' + error.message, 'danger');
@@ -229,11 +238,16 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     }
 
     // 3. Status/Area filters
-    return (roleFilter === 'Todos' || ord.area_asignada === roleFilter || ord.area_asignada === 'Ambas' || !ord.area_asignada) &&
+    const passArea = roleFilter === 'Todos' || ord.area_asignada === roleFilter || ord.area_asignada === 'Ambas' || !ord.area_asignada;
+    
+    // 4. Service filter (vehiculo_modelo)
+    const passService = serviceFilter === 'Todos' || (ord.vehiculo_modelo && ord.vehiculo_modelo.toLowerCase().includes(serviceFilter.toLowerCase()));
+
+    return passArea && passService &&
       (
-        ord.cliente_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (ord.cliente_nombre && ord.cliente_nombre.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (ord.vehiculo_patente && ord.vehiculo_patente.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        ord.problema_reportado.toLowerCase().includes(searchTerm.toLowerCase())
+        (ord.problema_reportado && ord.problema_reportado.toLowerCase().includes(searchTerm.toLowerCase()))
       );
   });
 
@@ -391,7 +405,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       </div>
 
       {/* Search and Form */}
-      <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', gap: '8px', border: '1px solid var(--border)', padding: '4px', borderRadius: '8px', backgroundColor: 'var(--bg-card)' }}>
           <button 
             onClick={() => setDateFilter('hoy')}
@@ -430,6 +444,23 @@ const WorkOrderManager = ({ companyId, addToast }) => {
             </button>
           ))}
         </div>
+
+        <div style={{ display: 'flex', gap: '8px', border: '1px solid var(--border)', padding: '4px', borderRadius: '8px', backgroundColor: 'var(--bg-card)', overflowX: 'auto' }}>
+          {['Todos', ...modelOptions].map(service => (
+            <button 
+              key={service}
+              onClick={() => setServiceFilter(service)}
+              style={{ 
+                padding: '6px 12px', fontSize: '0.875rem', borderRadius: '6px', fontWeight: 600, border: 'none', 
+                backgroundColor: serviceFilter === service ? 'var(--accent)' : 'transparent', 
+                color: serviceFilter === service ? 'white' : 'var(--text-muted)', cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {service === 'Todos' ? 'Todos los Servicios' : service}
+            </button>
+          ))}
+        </div>
         <div style={{ position: 'relative', width: '300px' }}>
           <Search size={20} style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }} />
           <input 
@@ -458,9 +489,48 @@ const WorkOrderManager = ({ companyId, addToast }) => {
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>{labels.patente}</label>
               <input type="text" placeholder="..." value={newPatent} onChange={e => setNewPatent(e.target.value)} style={{ width: '100%' }} />
             </div>
-            <div>
+            <div style={{ position: 'relative' }}>
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>{labels.modelo}</label>
-              <input type="text" placeholder="..." value={newModel} onChange={e => setNewModel(e.target.value)} style={{ width: '100%' }} />
+              <input 
+                type="text" 
+                placeholder="..." 
+                value={newModel} 
+                onChange={e => setNewModel(e.target.value)} 
+                onFocus={() => setShowModelDropdown(true)}
+                onBlur={() => setTimeout(() => setShowModelDropdown(false), 200)}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }} 
+              />
+              {showModelDropdown && (
+                <ul style={{ 
+                  position: 'absolute', top: '100%', left: 0, right: 0, 
+                  backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', 
+                  borderRadius: '8px', marginTop: '4px', padding: '0', 
+                  listStyle: 'none', zIndex: 50, maxHeight: '200px', overflowY: 'auto',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.5)' 
+                }}>
+                  {modelOptions.filter(opt => opt.toLowerCase().includes((newModel || '').toLowerCase())).map((opt, i, arr) => (
+                    <li 
+                      key={i} 
+                      onClick={() => { setNewModel(opt); setShowModelDropdown(false); }}
+                      style={{ padding: '10px 14px', cursor: 'pointer', color: 'white', borderBottom: i === arr.length - 1 && newModel && !modelOptions.some(o => o.toLowerCase() === newModel.toLowerCase()) ? '1px solid var(--border)' : (i === arr.length - 1 ? 'none' : '1px solid var(--border)') }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-lighter)'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      {opt}
+                    </li>
+                  ))}
+                  {newModel && !modelOptions.some(opt => opt.toLowerCase() === newModel.toLowerCase()) && (
+                    <li 
+                      onClick={() => { setShowModelDropdown(false); }}
+                      style={{ padding: '10px 14px', cursor: 'pointer', color: 'var(--accent)', fontStyle: 'italic' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-lighter)'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      Usar "{newModel}"
+                    </li>
+                  )}
+                </ul>
+              )}
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Área Asignada *</label>
@@ -511,9 +581,47 @@ const WorkOrderManager = ({ companyId, addToast }) => {
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>{labels.patente}</label>
               <input type="text" value={editingOrder.vehiculo_patente || ''} onChange={e => setEditingOrder({...editingOrder, vehiculo_patente: e.target.value})} style={{ width: '100%' }} />
             </div>
-            <div>
+            <div style={{ position: 'relative' }}>
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>{labels.modelo}</label>
-              <input type="text" value={editingOrder.vehiculo_modelo || ''} onChange={e => setEditingOrder({...editingOrder, vehiculo_modelo: e.target.value})} style={{ width: '100%' }} />
+              <input 
+                type="text" 
+                value={editingOrder.vehiculo_modelo || ''} 
+                onChange={e => setEditingOrder({...editingOrder, vehiculo_modelo: e.target.value})} 
+                onFocus={() => setShowEditModelDropdown(true)}
+                onBlur={() => setTimeout(() => setShowEditModelDropdown(false), 200)}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }} 
+              />
+              {showEditModelDropdown && (
+                <ul style={{ 
+                  position: 'absolute', top: '100%', left: 0, right: 0, 
+                  backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', 
+                  borderRadius: '8px', marginTop: '4px', padding: '0', 
+                  listStyle: 'none', zIndex: 50, maxHeight: '200px', overflowY: 'auto',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.5)' 
+                }}>
+                  {modelOptions.filter(opt => opt.toLowerCase().includes((editingOrder.vehiculo_modelo || '').toLowerCase())).map((opt, i, arr) => (
+                    <li 
+                      key={i} 
+                      onClick={() => { setEditingOrder({...editingOrder, vehiculo_modelo: opt}); setShowEditModelDropdown(false); }}
+                      style={{ padding: '10px 14px', cursor: 'pointer', color: 'white', borderBottom: i === arr.length - 1 && editingOrder.vehiculo_modelo && !modelOptions.some(o => o.toLowerCase() === editingOrder.vehiculo_modelo.toLowerCase()) ? '1px solid var(--border)' : (i === arr.length - 1 ? 'none' : '1px solid var(--border)') }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-lighter)'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      {opt}
+                    </li>
+                  ))}
+                  {editingOrder.vehiculo_modelo && !modelOptions.some(opt => opt.toLowerCase() === (editingOrder.vehiculo_modelo || '').toLowerCase()) && (
+                    <li 
+                      onClick={() => setShowEditModelDropdown(false)}
+                      style={{ padding: '10px 14px', cursor: 'pointer', color: 'var(--accent)', fontStyle: 'italic' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-lighter)'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      Usar "{editingOrder.vehiculo_modelo}"
+                    </li>
+                  )}
+                </ul>
+              )}
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Colaborador Asignado</label>
