@@ -8,6 +8,6 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
 
-  # Todo lo demás envíalo a index.html para que React Router haga su magia
+  # Todo lo demÃ¡s envÃ­alo a index.html para que React Router haga su magia
   RewriteRule ^ index.html [QSA,L]
 </IfModule>

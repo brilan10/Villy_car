@@ -24,7 +24,7 @@ if ($isLocalhost) {
 } else {
     // Credenciales WebHost Chile
     $host = 'localhost'; 
-    $db   = 'villycar_base_de_datos'; // o 'villycar_base de datos'
+    $db   = 'villycar_base de datos'; 
     $user = 'villycar_joel'; 
     $pass = 'abc.123.vilycar'; 
 }
