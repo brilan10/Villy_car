@@ -220,8 +220,8 @@ const QuotationManager = ({ companyId, addToast }) => {
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(100, 100, 100);
-      if (companyInfo.subtitle) {
-        doc.text(companyInfo.subtitle, 196, 32, { align: 'right' });
+      if (companyInfo.logoUrl) {
+        doc.text(companyInfo.name, 196, 32, { align: 'right' });
       }
 
       // Invoice Number
