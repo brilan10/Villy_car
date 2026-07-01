@@ -1,4 +1,4 @@
-﻿<IfModule mod_rewrite.c>
+<IfModule mod_rewrite.c>
   RewriteEngine On
 
   # Evitar que las llamadas a la API sean redirigidas a React
