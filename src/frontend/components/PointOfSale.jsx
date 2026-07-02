@@ -319,23 +319,9 @@ const PointOfSale = ({ companyId, addToast }) => {
             <span>${total.toLocaleString()}</span>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <button 
-              className="btn-success" 
-              style={{ flex: 1, justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '8px', padding: '14px', fontSize: '1.1rem' }}
-              disabled={cart.length === 0}
-              onClick={() => setShowCheckout(true)}
-            >
-              <CreditCard size={20} />
-              Cobrar
-            </button>
-            <button 
-              className="btn-primary" 
-              style={{ flex: 1, justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '8px', padding: '14px', fontSize: '1.1rem' }}
-              disabled={cart.length === 0}
-              onClick={() => setShowQuotationModal(true)}
-            >
-              Cotizar
-            </button>
+            <div style={{ padding: '12px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', borderRadius: '8px', textAlign: 'center', width: '100%', fontSize: '0.875rem', fontWeight: '500' }}>
+              Funciones de Cobro y Cotización temporalmente deshabilitadas.
+            </div>
           </div>
         </div>
       </div>

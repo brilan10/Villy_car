@@ -52,7 +52,7 @@ const Dashboard = ({ companyId }) => {
   const [exportPeriod, setExportPeriod] = useState('mensual'); // 'diario', 'semanal', 'mensual', 'rango'
   const [exportStartDate, setExportStartDate] = useState('');
   const [exportEndDate, setExportEndDate] = useState('');
-  const [exportLoading, setExportLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
   const getCompanyName = () => {

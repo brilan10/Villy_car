@@ -148,11 +148,11 @@ const QuotationManager = ({ companyId, addToast }) => {
 
   const getCompanyInfo = (id) => {
     switch (parseInt(id)) {
-      case 1: return { name: 'J2 PUBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', giro: 'Producción Gráfica', cuenta: 'Solicitar por email', logoUrl: '/logo_j2.jpeg' };
-      case 2: return { name: 'DWORK SPA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', giro: 'Servicios', cuenta: 'Solicitar por email', logoUrl: '/logo_dwork.png' };
-      case 3: return { name: 'VILLY CAR SPA', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: '', giro: 'Taller Mecánico', cuenta: 'Solicitar por email', logoUrl: '/Logo Villy Car.jpg' };
-      case 4: return { name: 'TRANSPORTES Y TURISMOS J2 SPA', rut: '78.406.906-0', email: 'contacto@j2publicidad.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', giro: 'Transporte', cuenta: 'Solicitar por email', logoUrl: '/logo_transportes.png' };
-      default: return { name: 'EMPRESA', rut: '1.111.111-1', email: 'contacto@empresa.com', phone: '', address: '', subtitle: '', giro: '', cuenta: '', logoUrl: null };
+      case 1: return { name: 'J2 PUIBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '00-118-22467-00', logoUrl: '/j2.png' };
+      case 2: return { name: 'DWORK SpA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '1182224300', logoUrl: '/dwork.png' };
+      case 3: return { name: 'VILLYCAR SpA', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: '', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '1182322508', logoUrl: '/VILLYCAR_TUNING.png' };
+      case 4: return { name: 'TRANSPORTES', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '1182322508', logoUrl: '/transportes.png' };
+      default: return { name: 'EMPRESA', rut: '1.111.111-1', email: 'contacto@empresa.com', phone: '', address: '', subtitle: '', banco: '', tipoCuenta: '', cuenta: '', logoUrl: null };
     }
   };
 
@@ -178,7 +178,7 @@ const QuotationManager = ({ companyId, addToast }) => {
       
       let themeColor = [40, 53, 108]; // Default / J2 Publicidad
       if (parseInt(currentCompanyId) === 2) themeColor = [0, 0, 0]; // Dwork (Black)
-      if (parseInt(currentCompanyId) === 3) themeColor = [249, 115, 22]; // VillyCar (Orange)
+      if (parseInt(currentCompanyId) === 3) themeColor = [220, 38, 38]; // VillyCar (Red)
       if (parseInt(currentCompanyId) === 4) themeColor = [51, 51, 51]; // Transportes (Dark Grey)
 
       const lightGray = [240, 240, 240];
@@ -207,7 +207,8 @@ const QuotationManager = ({ companyId, addToast }) => {
       if (companyInfo.logoUrl) {
         const base64Logo = await getLogoBase64(companyInfo.logoUrl);
         if (base64Logo) {
-          doc.addImage(base64Logo, 'JPEG', 166, 10, 35, 15);
+          // Adjust image size to fit nicely, preventing deformation
+          doc.addImage(base64Logo, 'PNG', 140, 10, 60, 25, undefined, 'FAST');
         } else {
           doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
           doc.setFontSize(20);
@@ -219,13 +220,6 @@ const QuotationManager = ({ companyId, addToast }) => {
         doc.setFontSize(20);
         doc.setFont('helvetica', 'bold');
         doc.text(companyInfo.name, 196, 25, { align: 'right' });
-      }
-      
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(100, 100, 100);
-      if (companyInfo.logoUrl) {
-        doc.text(companyInfo.name, 196, 32, { align: 'right' });
       }
 
       // Invoice Number
@@ -247,10 +241,11 @@ const QuotationManager = ({ companyId, addToast }) => {
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${companyInfo.name} - RUT: ${companyInfo.rut}`, 14, 66);
-      doc.text(`Giro: ${companyInfo.giro}`, 14, 71);
-      doc.text(`Cuenta: ${companyInfo.cuenta}`, 14, 76);
-      doc.text(`Email de pago: ${companyInfo.email}`, 14, 81);
+      doc.text(`Razón Social: ${companyInfo.name}`, 14, 66);
+      doc.text(`RUT: ${companyInfo.rut}`, 14, 71);
+      doc.text(`${companyInfo.banco}`, 14, 76);
+      doc.text(`${companyInfo.tipoCuenta} Nº: ${companyInfo.cuenta}`, 14, 81);
+      doc.text(`${companyInfo.email}`, 14, 86);
 
       // Right Column - Client
       doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
@@ -290,19 +285,25 @@ const QuotationManager = ({ companyId, addToast }) => {
 
       autoTable(doc, {
         startY: currentY,
-        head: [['Nº', 'DESCRIPCIÓN', 'CANT.', 'U. MED.', 'VALOR U.', 'TOTAL']],
-        body: tableData,
+        head: [['Nº', 'DESCRIPCIÓN', 'CANT.', 'VALOR U.', 'TOTAL']],
+        body: items.map((item, index) => [
+          index + 1,
+          item.descripcion,
+          item.cantidad,
+          `$${parseFloat(item.precio || 0).toLocaleString('es-CL')}`,
+          `$${(parseFloat(item.cantidad || 0) * parseFloat(item.precio || 0)).toLocaleString('es-CL')}`
+        ]),
         theme: 'grid',
         headStyles: { fillColor: themeColor, textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-        styles: { fontSize: 9, cellPadding: 5, valign: 'middle' },
+        styles: { fontSize: 9, cellPadding: 8, valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.1 },
         columnStyles: { 
-          0: { halign: 'center', cellWidth: 10 },
+          0: { halign: 'center', cellWidth: 15 },
           1: { halign: 'left' },
-          2: { halign: 'center', cellWidth: 18 },
-          3: { halign: 'center', cellWidth: 20 },
-          4: { halign: 'right', cellWidth: 28 },
-          5: { halign: 'right', cellWidth: 30 }
+          2: { halign: 'center', cellWidth: 25 },
+          3: { halign: 'right', cellWidth: 35 },
+          4: { halign: 'right', cellWidth: 35 }
         },
+        alternateRowStyles: { fillColor: [250, 250, 250] },
       });
 
       const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : currentY + 30;
