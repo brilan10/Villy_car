@@ -149,9 +149,9 @@ const QuotationManager = ({ companyId, addToast }) => {
   const getCompanyInfo = (id) => {
     switch (parseInt(id)) {
       case 1: return { name: 'J2 PUBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', giro: 'Producción Gráfica', cuenta: 'Solicitar por email', logoUrl: '/logo_j2.jpeg' };
-      case 2: return { name: 'DWORK SPA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', giro: 'Servicios', cuenta: 'Solicitar por email', logoUrl: null };
+      case 2: return { name: 'DWORK SPA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', giro: 'Servicios', cuenta: 'Solicitar por email', logoUrl: '/logo_dwork.png' };
       case 3: return { name: 'VILLY CAR SPA', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: '', giro: 'Taller Mecánico', cuenta: 'Solicitar por email', logoUrl: '/Logo Villy Car.jpg' };
-      case 4: return { name: 'TRANSPORTES Y TURISMOS J2 SPA', rut: '78.406.906-0', email: 'contacto@j2publicidad.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', giro: 'Transporte', cuenta: 'Solicitar por email', logoUrl: null };
+      case 4: return { name: 'TRANSPORTES Y TURISMOS J2 SPA', rut: '78.406.906-0', email: 'contacto@j2publicidad.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', giro: 'Transporte', cuenta: 'Solicitar por email', logoUrl: '/logo_transportes.png' };
       default: return { name: 'EMPRESA', rut: '1.111.111-1', email: 'contacto@empresa.com', phone: '', address: '', subtitle: '', giro: '', cuenta: '', logoUrl: null };
     }
   };
@@ -176,7 +176,11 @@ const QuotationManager = ({ companyId, addToast }) => {
       const currentCompanyId = quote.empresa_id ? quote.empresa_id : companyId;
       const companyInfo = getCompanyInfo(currentCompanyId);
       
-      const themeColor = [40, 53, 108]; // Dark blue theme
+      let themeColor = [40, 53, 108]; // Default / J2 Publicidad
+      if (parseInt(currentCompanyId) === 2) themeColor = [0, 0, 0]; // Dwork (Black)
+      if (parseInt(currentCompanyId) === 3) themeColor = [249, 115, 22]; // VillyCar (Orange)
+      if (parseInt(currentCompanyId) === 4) themeColor = [51, 51, 51]; // Transportes (Dark Grey)
+
       const lightGray = [240, 240, 240];
       
       // Top Left Header Background

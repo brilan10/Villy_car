@@ -101,6 +101,7 @@ export const saveInvoiceEntry = (companyId, data) => fetchAPI(`/finances.php?act
 export const getAccounts = (companyId) => fetchAPI(`/accounts.php?empresa_id=${companyId}`);
 export const createAccount = (companyId, data) => fetchAPI(`/accounts.php?empresa_id=${companyId}`, { method: 'POST', body: JSON.stringify(data) });
 export const updateAccount = (companyId, data) => fetchAPI(`/accounts.php?empresa_id=${companyId}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteAccount = (companyId, id) => fetchAPI(`/accounts.php?empresa_id=${companyId}&id=${id}`, { method: 'DELETE' });
 export const addPayment = (companyId, data) => fetchAPI(`/accounts.php?action=pay&empresa_id=${companyId}`, { method: 'POST', body: JSON.stringify(data) });
 
 // Cierres de Caja

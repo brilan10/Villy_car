@@ -372,105 +372,103 @@ const Dashboard = ({ companyId }) => {
         const colLetter = String.fromCharCode(64 + balanceIdx + 1);
         sheet.addConditionalFormatting({
           ref: `${colLetter}5:${colLetter}${currentRowIdx - 1}`,
-          rules: [{
-            type: 'dataBar',
-            cfvo: [{ type: 'min' }, { type: 'max' }],
-            color: { argb: 'FF818CF8' }
-          }]
+          rules: [
+            { type: 'dataBar', cfvo: [{ type: 'min' }, { type: 'max' }], color: { argb: 'FF10B981' } }
+          ]
         });
       }
-    };
+    }; // end createSheet
 
-    if (exportType === 'ambos') {
-      createSheet(
-        'Resumen General', 
-        [
-          { header: 'Periodo', key: 'periodo', width: 20 },
+    try {
+      if (exportType === 'ambos' || exportType === 'ingresos') {
+        createSheet('Ingresos', [
+          { header: 'Periodo', key: 'name', width: 25 },
+          { header: 'Ingresos', key: 'ingresos', width: 20, isCurrency: true }
+        ], { name: i => i.name, ingresos: i => i.ingresos }, 'FF10B981');
+      }
+
+      if (exportType === 'ambos' || exportType === 'egresos') {
+        createSheet('Egresos', [
+          { header: 'Periodo', key: 'name', width: 25 },
+          { header: 'Egresos', key: 'egresos', width: 20, isCurrency: true }
+        ], { name: i => i.name, egresos: i => i.egresos }, 'FFEF4444');
+      }
+
+      if (exportType === 'ambos') {
+        createSheet('Resumen Consolidado', [
+          { header: 'Periodo', key: 'name', width: 25 },
           { header: 'Ingresos', key: 'ingresos', width: 20, isCurrency: true },
           { header: 'Egresos', key: 'egresos', width: 20, isCurrency: true },
-          { header: 'Margen Neto', key: 'balance', width: 25, isCurrency: true }
-        ],
-        {
-          periodo: item => item.name,
-          balance: item => item.ingresos - item.egresos
-        },
-        'FF6366F1' // Indigo
-      );
-    }
-    
-    if (exportType === 'ingresos' || exportType === 'ambos') {
-      createSheet(
-        'Ingresos', 
-        [
-          { header: 'Periodo', key: 'periodo', width: 20 },
-          { header: 'Ingresos Recaudados', key: 'ingresos', width: 25, isCurrency: true },
-        ],
-        { periodo: item => item.name },
-        'FF10B981' // Green
-      );
-    }
+          { header: 'Margen Neto', key: 'balance', width: 20, isCurrency: true }
+        ], { 
+          name: i => i.name, 
+          ingresos: i => i.ingresos, 
+          egresos: i => i.egresos, 
+          balance: i => i.ingresos - i.egresos 
+        }, 'FF6366F1');
+      }
 
-    if (exportType === 'egresos' || exportType === 'ambos') {
-      createSheet(
-        'Egresos', 
-        [
-          { header: 'Periodo', key: 'periodo', width: 20 },
-          { header: 'Costos Operativos', key: 'egresos', width: 25, isCurrency: true },
-        ],
-        { periodo: item => item.name },
-        'FFEF4444' // Red
-      );
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `Reporte_Financiero_${getCompanyName().replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
+      link.click();
+    } catch (error) {
+      console.error("Error al exportar a Excel:", error);
+      if(addToast) addToast('Error al exportar a Excel: ' + error.message, 'danger');
+    } finally {
+      setIsExporting(false);
+      setShowExportModal(false);
     }
-
-    const fileName = `Reporte_VillyCar_${exportType}_${periodName.replace(/\//g, '-')}.xlsx`;
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, fileName);
-
-    setIsExporting(false);
-    setShowExportModal(false);
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     setIsExporting(true);
-    const doc = new jsPDF();
-    const baseData = getBaseData();
-    const periodName = getPeriodName();
+    try {
+      const doc = new jsPDF();
+      const baseData = getBaseData();
+      const periodName = getPeriodName();
 
-    doc.setFontSize(20);
-    doc.setTextColor(30);
-    doc.text(`REPORTE FINANCIERO - ${getCompanyName()}`, 14, 22);
-    
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text(`Periodo: ${periodName.toUpperCase()}   |   Fecha de emisión: ${new Date().toLocaleDateString()}`, 14, 30);
+      doc.setFontSize(20);
+      doc.setTextColor(30);
+      doc.text(`REPORTE FINANCIERO - ${getCompanyName()}`, 14, 22);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Periodo: ${periodName.toUpperCase()}   |   Fecha de emisión: ${new Date().toLocaleDateString()}`, 14, 30);
 
-    let head = [['Periodo']];
-    if (exportType === 'ingresos' || exportType === 'ambos') head[0].push('Ingresos');
-    if (exportType === 'egresos' || exportType === 'ambos') head[0].push('Egresos');
-    if (exportType === 'ambos') head[0].push('Margen Neto');
+      let head = [['Periodo']];
+      if (exportType === 'ingresos' || exportType === 'ambos') head[0].push('Ingresos');
+      if (exportType === 'egresos' || exportType === 'ambos') head[0].push('Egresos');
+      if (exportType === 'ambos') head[0].push('Margen Neto');
 
-    const body = baseData.map(item => {
-      let row = [item.name];
-      if (exportType === 'ingresos' || exportType === 'ambos') row.push(`$${item.ingresos.toLocaleString()}`);
-      if (exportType === 'egresos' || exportType === 'ambos') row.push(`$${item.egresos.toLocaleString()}`);
-      if (exportType === 'ambos') row.push(`$${(item.ingresos - item.egresos).toLocaleString()}`);
-      return row;
-    });
+      const body = baseData.map(item => {
+        let row = [item.name];
+        if (exportType === 'ingresos' || exportType === 'ambos') row.push(`$${item.ingresos.toLocaleString()}`);
+        if (exportType === 'egresos' || exportType === 'ambos') row.push(`$${item.egresos.toLocaleString()}`);
+        if (exportType === 'ambos') row.push(`$${(item.ingresos - item.egresos).toLocaleString()}`);
+        return row;
+      });
 
-    doc.autoTable({
-      startY: 40,
-      head: head,
-      body: body,
-      theme: 'grid',
-      headStyles: { fillColor: [99, 102, 241], textColor: [255, 255, 255], fontStyle: 'bold' },
-      styles: { fontSize: 10, cellPadding: 6, halign: 'center' },
-      columnStyles: { 0: { halign: 'left' } },
-    });
+      doc.autoTable({
+        startY: 40,
+        head: head,
+        body: body,
+        theme: 'grid',
+        headStyles: { fillColor: [99, 102, 241], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { fontSize: 10, cellPadding: 6, halign: 'center' },
+        columnStyles: { 0: { halign: 'left' } },
+      });
 
-    window.open(doc.output('bloburl'), '_blank');
-    setIsExporting(false);
-    setShowExportModal(false);
+      window.open(doc.output('bloburl'), '_blank');
+    } catch (error) {
+      console.error("Error al exportar a PDF:", error);
+      if(addToast) addToast('Error al exportar a PDF: ' + error.message, 'danger');
+    } finally {
+      setIsExporting(false);
+      setShowExportModal(false);
+    }
   };
 
   const handleSendEmail = () => {

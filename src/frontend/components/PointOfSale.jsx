@@ -157,6 +157,23 @@ const PointOfSale = ({ companyId, addToast }) => {
 
     try {
       await createSale(companyId, payload);
+      
+      // Si la venta es al contado y en efectivo, registrar el ingreso en Finanzas
+      if (paymentCondition === 'contado' && paymentMethod === 'efectivo') {
+        const txPayload = {
+          tipo: 'ingreso',
+          monto: total,
+          categoria: 'Ventas POS',
+          descripcion: `Venta POS - Efectivo - ${cart.map(c => c.name).join(', ')}`,
+          fecha: new Date().toISOString().split('T')[0]
+        };
+        try {
+          await createFinanceTx(companyId, txPayload);
+        } catch (e) {
+          console.error("Error al registrar venta POS en finanzas:", e);
+        }
+      }
+
       addToast('¡Venta procesada con éxito en la Base de Datos!', 'success');
       setCart([]);
       setShowCheckout(false);

@@ -4,10 +4,10 @@ import { getFinances, getCashClosures, saveCashClosure } from '../services/api';
 
 const getCompanyNames = (id) => {
   const names = { 
-    '1': 'Dwork', 
-    '2': 'Transportes', 
-    '3': 'J2 Publicidad', 
-    '4': 'Villy Car Tuning' 
+    '1': 'J2 Publicidad', 
+    '2': 'Dwork', 
+    '3': 'Villy Car Tuning', 
+    '4': 'Transportes' 
   };
   return names[id] || 'Empresa';
 };
@@ -182,10 +182,10 @@ const FinancialManager = ({ companyId, addToast }) => {
                 cursor: 'pointer'
               }}
             >
-              <option value="1" style={{ backgroundColor: 'var(--bg-card)' }}>1. Dwork</option>
-              <option value="2" style={{ backgroundColor: 'var(--bg-card)' }}>2. Transportes</option>
-              <option value="3" style={{ backgroundColor: 'var(--bg-card)' }}>3. J2 Publicidad</option>
-              <option value="4" style={{ backgroundColor: 'var(--bg-card)' }}>4. Villy Car Tuning</option>
+              <option value="1" style={{ backgroundColor: 'var(--bg-card)' }}>1. J2 Publicidad</option>
+              <option value="2" style={{ backgroundColor: 'var(--bg-card)' }}>2. Dwork</option>
+              <option value="3" style={{ backgroundColor: 'var(--bg-card)' }}>3. Villy Car Tuning</option>
+              <option value="4" style={{ backgroundColor: 'var(--bg-card)' }}>4. Transportes</option>
               <option value="all" style={{ backgroundColor: 'var(--bg-card)', fontWeight: 700, color: 'var(--accent)' }}>✨ MOSTRAR TODAS</option>
             </select>
           </div>
@@ -408,7 +408,7 @@ const FinancialManager = ({ companyId, addToast }) => {
         <div className="card" style={{ marginTop: '24px', padding: '24px', width: '100%' }}>
           <h2 className="title-md" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Clock size={20} color="var(--accent)" />
-            Historial de Arqueos de Caja - {getCompanyNames(companyId)}
+            Historial de Arqueos de Caja - {getCompanyNames(selectedFilter)}
           </h2>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>

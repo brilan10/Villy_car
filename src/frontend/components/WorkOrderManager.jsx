@@ -50,7 +50,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     try {
       const data = await getWorkOrders(companyId);
       setOrders(data);
-      const workersData = await getWorkers(companyId, false, true);
+      const workersData = await getWorkers(companyId, false, false);
       setWorkers(workersData.filter(w => w.rol === 'trabajador'));
     } catch (error) {
       addToast('Error al cargar datos: ' + error.message, 'danger');
@@ -64,7 +64,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   }, [companyId]);
 
   const moveOrder = async (id, direction) => {
-    const statusFlow = ['ingresado', 'en_revision', 'presupuestado', 'en_reparacion', 'completado', 'entregado'];
+    const statusFlow = ['ingresado', 'en_revision', 'en_reparacion', 'completado', 'entregado'];
     const ord = orders.find(o => o.id === id);
     if (!ord) return;
     
@@ -75,8 +75,8 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     
     // Skip 'en_revision' to ensure visual column change (since ingresado and en_revision are in the same column)
     if (direction === 1 && (ord.estado === 'ingresado' || ord.estado === 'en_revision')) {
-      nextIndex = statusFlow.indexOf('presupuestado');
-    } else if (direction === -1 && ord.estado === 'presupuestado') {
+      nextIndex = statusFlow.indexOf('en_reparacion');
+    } else if (direction === -1 && ord.estado === 'en_reparacion') {
       nextIndex = statusFlow.indexOf('ingresado');
     }
     
@@ -84,10 +84,9 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       const newStatus = statusFlow[nextIndex];
       const progressMap = {
         'ingresado': 0,
-        'en_revision': 20,
-        'presupuestado': 40,
-        'en_reparacion': 60,
-        'completado': 80,
+        'en_revision': 25,
+        'en_reparacion': 50,
+        'completado': 75,
         'entregado': 100
       };
       
@@ -366,22 +365,18 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                     </>
                   )}
                 </div>
-                {!isWorker ? (
-                  <>
-                    <button onClick={() => moveOrder(ord.id, -1)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', color: 'var(--text-muted)' }} disabled={ord.estado === 'ingresado'}>
-                      <ArrowLeft size={16} />
-                    </button>
-                    <button 
-                      onClick={() => moveOrder(ord.id, 1)} 
-                      style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }} 
-                      disabled={ord.estado === 'entregado'}
-                    >
-                      <ArrowRight size={16} />
-                    </button>
-                  </>
-                ) : (
-                  <div style={{ padding: '4px', height: '24px' }}></div>
-                )}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={() => moveOrder(ord.id, -1)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', color: 'var(--text-muted)' }} disabled={ord.estado === 'ingresado'}>
+                    <ArrowLeft size={16} />
+                  </button>
+                  <button 
+                    onClick={() => moveOrder(ord.id, 1)} 
+                    style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }} 
+                    disabled={ord.estado === 'entregado'}
+                  >
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -649,11 +644,10 @@ const WorkOrderManager = ({ companyId, addToast }) => {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>Cargando órdenes de trabajo...</div>
       ) : (
         <div style={{ display: 'flex', gap: '24px', overflowX: 'auto', flex: 1 }}>
-          {renderColumn(['ingresado', 'en_revision'], 'Ingresados (Cola)', '#ff4444')}
-          {renderColumn(['presupuestado'], 'Presupuestados', '#ffbb33')}
-          {renderColumn(['en_reparacion'], 'En Producción', '#33b5e5')}
-          {renderColumn(['completado'], 'Completados (Por Entregar)', '#00C851')}
-          {renderColumn(['entregado'], 'Entregados (Historial)', '#888888')}
+          {renderColumn(['ingresado', 'en_revision'], 'Recepción', '#4caf50')}
+          {renderColumn(['en_reparacion'], 'En Proceso', '#2196f3')}
+          {renderColumn(['completado'], 'Finalizado', '#9c27b0')}
+          {renderColumn(['entregado'], 'Entregado', '#607d8b')}
         </div>
       )}
 

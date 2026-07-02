@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Calendar, FileText, User, DollarSign, CheckCircle2, ChevronRight, X, AlertTriangle, Download } from 'lucide-react';
-import { getAccounts, createAccount, updateAccount, addPayment, createFinanceTx, getWorkers, getFinances } from '../services/api';
+import { Plus, Search, Calendar, FileText, User, DollarSign, CheckCircle2, ChevronRight, X, AlertTriangle, Download, Trash2 } from 'lucide-react';
+import { getAccounts, createAccount, updateAccount, addPayment, createFinanceTx, getWorkers, getFinances, deleteAccount } from '../services/api';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -151,7 +151,19 @@ const AccountsManager = ({ companyId, addToast }) => {
       setEditingAccount(null);
       loadData();
     } catch (error) {
-      addToast('Error al editar: ' + error.message, 'danger');
+      addToast('Error al editar cuenta: ' + error.message, 'danger');
+    }
+  };
+
+  const handleDeleteAccount = async (id) => {
+    if (window.confirm('¿Está seguro de eliminar esta cuenta? Esta acción no se puede deshacer.')) {
+      try {
+        await deleteAccount(companyId, id);
+        addToast('Cuenta eliminada correctamente', 'success');
+        loadData();
+      } catch (error) {
+        addToast('Error al eliminar cuenta: ' + error.message, 'danger');
+      }
     }
   };
 
@@ -403,6 +415,13 @@ const AccountsManager = ({ companyId, addToast }) => {
                                   <DollarSign size={14} /> Abonar
                                 </button>
                               )}
+                              <button 
+                                onClick={() => handleDeleteAccount(acc.id)} 
+                                style={{ padding: '6px', borderRadius: '4px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: '1px solid var(--danger)' }}
+                                title="Eliminar cuenta"
+                              >
+                                <Trash2 size={14} />
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -491,6 +510,13 @@ const AccountsManager = ({ companyId, addToast }) => {
                                   <DollarSign size={14} /> Pagar / Abonar
                                 </button>
                               )}
+                              <button 
+                                onClick={() => handleDeleteAccount(acc.id)} 
+                                style={{ padding: '6px', borderRadius: '4px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: '1px solid var(--danger)' }}
+                                title="Eliminar cuenta"
+                              >
+                                <Trash2 size={14} />
+                              </button>
                             </div>
                           </td>
                         </tr>
