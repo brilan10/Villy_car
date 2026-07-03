@@ -51,6 +51,32 @@ try {
 
     echo "Cron completado. Correos enviados: $sent_count\n";
 
+    // Auto-limpieza de archivos de ordenes entregadas hace mas de 30 dias
+    $thirtyDaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
+    $stmtOldFiles = $pdo->query("SELECT id, archivos FROM ordenes_trabajo WHERE estado = 'entregado' AND fecha_entrega < '$thirtyDaysAgo' AND archivos IS NOT NULL AND archivos != '[]'");
+    $oldOrders = $stmtOldFiles->fetchAll();
+    
+    $deleted_files_count = 0;
+    foreach ($oldOrders as $oldOrd) {
+        $archivosArray = json_decode($oldOrd['archivos'], true);
+        if (is_array($archivosArray)) {
+            foreach ($archivosArray as $url) {
+                $fileName = basename($url);
+                $filePath = __DIR__ . '/uploads/nomina/' . $fileName;
+                if (file_exists($filePath)) {
+                    if(unlink($filePath)) {
+                        $deleted_files_count++;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Limpiar BD
+    $pdo->query("UPDATE ordenes_trabajo SET archivos = NULL WHERE estado = 'entregado' AND fecha_entrega < '$thirtyDaysAgo' AND archivos IS NOT NULL");
+    
+    echo "Limpieza de archivos completada. Archivos eliminados: $deleted_files_count\n";
+
 } catch (PDOException $e) {
     echo "Error ejecutando cron: " . $e->getMessage() . "\n";
 }

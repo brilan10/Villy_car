@@ -67,10 +67,6 @@ switch ($method) {
             }
         }
 
-        // Auto-limpieza de archivos de ordenes entregadas hace mas de 30 dias
-        $thirtyDaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
-        $pdo->query("UPDATE ordenes_trabajo SET archivos = NULL WHERE estado = 'entregado' AND fecha_entrega < '$thirtyDaysAgo' AND archivos IS NOT NULL");
-
         $stmt = $pdo->prepare("SELECT * FROM ordenes_trabajo WHERE empresa_id = ? ORDER BY fecha_ingreso DESC");
         $stmt->execute([$empresa_id]);
         $orders = $stmt->fetchAll();

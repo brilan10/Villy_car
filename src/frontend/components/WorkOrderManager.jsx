@@ -21,6 +21,8 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editFiles, setEditFiles] = useState([]);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [historySearchTerm, setHistorySearchTerm] = useState('');
 
   // Form states
   const [newClient, setNewClient] = useState('');
@@ -328,7 +330,12 @@ const WorkOrderManager = ({ companyId, addToast }) => {
           borderBottom: `3px solid ${accentColor}`,
           marginBottom: '16px' 
         }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', margin: 0 }}>{title}</h3>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {title}
+            {statusList.includes('entregado') && (
+               <button onClick={() => setShowHistoryModal(true)} style={{ background: 'var(--bg-lighter)', color: 'var(--accent)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }} className="hover-brightness">Historial</button>
+            )}
+          </h3>
           <span style={{ backgroundColor: 'var(--bg-card)', color: 'var(--text-muted)', fontSize: '0.8rem', padding: '2px 8px', borderRadius: '100px', fontWeight: 600 }}>{colOrders.length}</span>
         </div>
 
@@ -806,6 +813,48 @@ const WorkOrderManager = ({ companyId, addToast }) => {
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button onClick={() => setConfirmAction(null)} style={{ padding: '8px 16px', borderRadius: '8px', color: 'white', border: '1px solid var(--border)', background: 'transparent' }}>Cancelar</button>
               <button onClick={() => { confirmAction.onConfirm(); setConfirmAction(null); }} className="btn-danger" style={{ padding: '8px 16px', borderRadius: '8px' }}>Sí, eliminar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showHistoryModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
+          <div className="card animate-fade-in" style={{ width: '800px', maxWidth: '95%', margin: '0 auto auto auto', display: 'flex', flexDirection: 'column', maxHeight: '80vh' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '16px', marginBottom: '16px' }}>
+              <h2 className="title-md">Historial de Órdenes de Trabajo</h2>
+              <button onClick={() => setShowHistoryModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            
+            <div style={{ marginBottom: '16px' }}>
+              <input type="text" placeholder="Buscar por cliente, patente, problema..." value={historySearchTerm} onChange={e => setHistorySearchTerm(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }} />
+            </div>
+
+            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
+              {orders.filter(o => {
+                  if (historySearchTerm.trim() === '') return true;
+                  const term = historySearchTerm.toLowerCase();
+                  return (o.cliente_nombre?.toLowerCase().includes(term) || o.vehiculo_patente?.toLowerCase().includes(term) || o.problema_reportado?.toLowerCase().includes(term));
+              }).map(ord => (
+                <div key={ord.id} style={{ backgroundColor: 'var(--bg-main)', padding: '12px', borderRadius: '8px', borderLeft: `4px solid ${ord.estado === 'entregado' ? '#607d8b' : 'var(--accent)'}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <h4 style={{ color: 'white', margin: '0 0 4px 0' }}>OT-#{String(ord.id).padStart(4, '0')} - {ord.cliente_nombre}</h4>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: '0 0 4px 0' }}>Patente: {ord.vehiculo_patente} | Estado: {ord.estado.toUpperCase()}</p>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: 0 }}>Problema: {ord.problema_reportado}</p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: '0 0 8px 0' }}>{ord.fecha_ingreso}</p>
+                    <button onClick={() => { setShowHistoryModal(false); setShowBitacoraModal(ord); }} style={{ background: 'var(--accent)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '0.8rem', cursor: 'pointer' }}>Ver Detalle</button>
+                  </div>
+                </div>
+              ))}
+              {orders.filter(o => {
+                  if (historySearchTerm.trim() === '') return true;
+                  const term = historySearchTerm.toLowerCase();
+                  return (o.cliente_nombre?.toLowerCase().includes(term) || o.vehiculo_patente?.toLowerCase().includes(term) || o.problema_reportado?.toLowerCase().includes(term));
+              }).length === 0 && (
+                <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '20px' }}>No se encontraron órdenes.</div>
+              )}
             </div>
           </div>
         </div>
