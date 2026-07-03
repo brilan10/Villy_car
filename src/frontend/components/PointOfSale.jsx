@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Plus, Minus, Trash2, Search, CheckCircle, PackageSearch, Save, X, Printer, CreditCard } from 'lucide-react';
-import { getProducts, createSale, createFinanceTx, getCashClosures, saveCashClosure, createQuote } from '../services/api';
+import { getProducts, createSale, createFinanceTx, getCashClosures, saveCashClosure, createQuote, getFinances } from '../services/api';
 
 const PointOfSale = ({ companyId, addToast }) => {
   const [cart, setCart] = useState([]);
@@ -216,6 +216,35 @@ const PointOfSale = ({ companyId, addToast }) => {
     }
   };
 
+  const handleOpenClosureModal = async () => {
+    try {
+      const finanzas = await getFinances(companyId);
+      const hoyStr = new Date().toISOString().split('T')[0];
+      
+      let totalVentasEfectivo = 0;
+      finanzas.forEach(tx => {
+        const txDate = (tx.date || tx.fecha || '').split(' ')[0];
+        const isIngreso = tx.type === 'ingreso' || tx.tipo === 'ingreso';
+        const isPOS = tx.category === 'Ventas POS' || tx.categoria === 'Ventas POS';
+        if (txDate === hoyStr && isIngreso && isPOS) {
+          if ((tx.description || tx.descripcion || '').toLowerCase().includes('efectivo')) {
+             totalVentasEfectivo += parseFloat(tx.amount || tx.monto) || 0;
+          }
+        }
+      });
+      
+      setClosureData({ 
+        ...closureData, 
+        monto_apertura: openBoxAmount || closureData.monto_apertura, 
+        ventas_efectivo_esperado: totalVentasEfectivo 
+      });
+      setShowClosureModal(true);
+    } catch (e) {
+      console.error(e);
+      addToast('Error al obtener ventas del día para el cierre', 'danger');
+    }
+  };
+
   return (
     <div className="animate-fade-in" style={{ display: 'flex', gap: '24px', height: 'calc(100vh - 64px)' }}>
       {/* Products Grid */}
@@ -236,7 +265,7 @@ const PointOfSale = ({ companyId, addToast }) => {
             ) : (
               <button 
                 style={{ backgroundColor: 'var(--accent)', color: 'white', padding: '10px 16px', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: 'pointer' }}
-                onClick={() => setShowClosureModal(true)}
+                onClick={handleOpenClosureModal}
               >
                 Cierre de Caja
               </button>
@@ -319,9 +348,14 @@ const PointOfSale = ({ companyId, addToast }) => {
             <span>${total.toLocaleString()}</span>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            <div style={{ padding: '12px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', borderRadius: '8px', textAlign: 'center', width: '100%', fontSize: '0.875rem', fontWeight: '500' }}>
-              Funciones de Cobro y Cotización temporalmente deshabilitadas.
-            </div>
+            <button 
+              className="btn-primary" 
+              style={{ flex: 1, justifyContent: 'center', opacity: (!isBoxOpen || cart.length === 0) ? 0.5 : 1 }} 
+              onClick={() => setShowCheckout(true)} 
+              disabled={!isBoxOpen || cart.length === 0}
+            >
+              Cobrar
+            </button>
           </div>
         </div>
       </div>
@@ -489,10 +523,10 @@ const PointOfSale = ({ companyId, addToast }) => {
               </div>
               
               <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Ventas en Efectivo (Según sistema)</label>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Ventas en Efectivo (Cálculo automático)</label>
                 <div style={{ position: 'relative' }}>
                   <span style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }}>$</span>
-                  <input type="number" style={{ width: '100%', paddingLeft: '28px' }} placeholder="0" value={closureData.ventas_efectivo_esperado} onChange={e => setClosureData({...closureData, ventas_efectivo_esperado: e.target.value})} />
+                  <input type="number" style={{ width: '100%', paddingLeft: '28px', backgroundColor: 'var(--bg-main)', color: 'var(--text-muted)' }} placeholder="0" value={closureData.ventas_efectivo_esperado} readOnly />
                 </div>
               </div>
 

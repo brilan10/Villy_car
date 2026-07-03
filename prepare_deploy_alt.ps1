@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 $Workspace = "c:\Users\yomiy\Documents\Proyectos\Villy Car"
-$DeployDir = "C:\Users\yomiy\Desktop\VillyCar_Webhost_Chile_BACKEND"
+$DeployDir = "c:\Users\yomiy\Documents\Proyectos\Villy Car\webhost_deploy"
 
 Set-Location $Workspace
 
@@ -46,5 +46,5 @@ $content = $content.Replace("`$pass = '';", "`$pass = 'FSKrY2w`$hi-w#TN^';")
 Set-Content -Path $DbConfigFile -Value $content -Encoding Ascii
 
 Write-Host "=========================================="
-Write-Host "¡Carpeta VillyCar_Webhost_Chile_BACKEND lista en tu Escritorio!"
+Write-Host "¡Carpeta webhost_deploy lista en tu proyecto!"
 Write-Host "=========================================="

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Plus, Search, Calendar, User, Tag, ArrowRight, ArrowLeft, CheckCircle2, Clock, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Calendar, User, Tag, ArrowRight, ArrowLeft, CheckCircle2, Clock, Edit, Trash2, X } from 'lucide-react';
 import { getWorkOrders, createWorkOrder, updateWorkOrder, deleteWorkOrder, getWorkers } from '../services/api';
 import { UserContext } from '../App';
 
@@ -98,8 +98,29 @@ const WorkOrderManager = ({ companyId, addToast }) => {
         });
         loadData();
       } catch (error) {
-        addToast('Error al actualizar estado: ' + error.message, 'danger');
+        addToast('Error al actualizar estado', 'danger');
       }
+    }
+  };
+
+  const handleDeleteAttachment = async (ordId, attachIdx) => {
+    if (!window.confirm("¿Seguro que deseas eliminar este adjunto?")) return;
+    try {
+      const ord = orders.find(o => o.id === ordId);
+      let adjuntos = [];
+      if (typeof ord.archivos === 'string') adjuntos = JSON.parse(ord.archivos);
+      else if (Array.isArray(ord.archivos)) adjuntos = ord.archivos;
+      
+      adjuntos.splice(attachIdx, 1); // Remover el archivo
+      
+      await updateWorkOrder(companyId, {
+        id: ordId,
+        archivos: JSON.stringify(adjuntos)
+      });
+      addToast('Adjunto eliminado con éxito.', 'success');
+      loadData();
+    } catch (e) {
+      addToast('Error al eliminar adjunto', 'danger');
     }
   };
 
@@ -341,9 +362,20 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                   return (
                     <div style={{ marginTop: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                       {adjuntos.map((url, idx) => (
-                        <a key={idx} href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.7rem', padding: '2px 6px', backgroundColor: 'var(--bg-card)', color: 'var(--accent)', borderRadius: '4px', textDecoration: 'none', border: '1px solid var(--accent)' }}>
-                          Adjunto {idx + 1}
-                        </a>
+                        <div key={idx} style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: 'var(--bg-card)', border: '1px solid var(--accent)', padding: '2px 6px', borderRadius: '4px' }}>
+                          <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent)', textDecoration: 'none' }}>
+                            Adjunto {idx + 1}
+                          </a>
+                          {!isWorker && (
+                            <button 
+                              onClick={(e) => { e.preventDefault(); handleDeleteAttachment(ord.id, idx); }} 
+                              style={{ marginLeft: '4px', background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                              title="Eliminar adjunto"
+                            >
+                              <X size={12} />
+                            </button>
+                          )}
+                        </div>
                       ))}
                     </div>
                   );

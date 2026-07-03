@@ -12,22 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
 }
 
-// Detectar si estamos en producción (WebHost) o local
-$isLocalhost = in_array($_SERVER['SERVER_NAME'], ['127.0.0.1', 'localhost', '::1']);
-
-if ($isLocalhost) {
-    // Credenciales Locales
-    $host = '127.0.0.1'; 
-    $db   = 'villy_car_db'; 
-    $user = 'root'; 
-    $pass = ''; 
-} else {
-    // Credenciales WebHost Chile
-    $host = 'localhost'; 
-    $db   = 'villycar_base de datos'; 
-    $user = 'villycar_joel'; 
-    $pass = 'abc.123.vilycar'; 
-}
+// Credenciales Locales (El script de deploy las reemplaza para produccion)
+$host = '127.0.0.1'; 
+$db   = 'villy_car_db'; 
+$user = 'root'; 
+$pass = ''; 
 
 $charset = 'utf8mb4';
 

@@ -177,9 +177,15 @@ const QuotationManager = ({ companyId, addToast }) => {
       const companyInfo = getCompanyInfo(currentCompanyId);
       
       let themeColor = [40, 53, 108]; // Default / J2 Publicidad
+      let totalBgColor = null;
       if (parseInt(currentCompanyId) === 2) themeColor = [0, 0, 0]; // Dwork (Black)
-      if (parseInt(currentCompanyId) === 3) themeColor = [220, 38, 38]; // VillyCar (Red)
+      if (parseInt(currentCompanyId) === 3) {
+        themeColor = [59, 179, 226]; // VillyCar (Light Blue)
+        totalBgColor = [255, 87, 34]; // Orange total box
+      }
       if (parseInt(currentCompanyId) === 4) themeColor = [51, 51, 51]; // Transportes (Dark Grey)
+      
+      if (!totalBgColor) totalBgColor = themeColor;
 
       const lightGray = [240, 240, 240];
       
@@ -207,8 +213,16 @@ const QuotationManager = ({ companyId, addToast }) => {
       if (companyInfo.logoUrl) {
         const base64Logo = await getLogoBase64(companyInfo.logoUrl);
         if (base64Logo) {
-          // Adjust image size to fit nicely, preventing deformation
-          doc.addImage(base64Logo, 'PNG', 140, 10, 60, 25, undefined, 'FAST');
+          // Adjust image size to fit nicely, preventing deformation.
+          const imgProps = doc.getImageProperties(base64Logo);
+          const maxWidth = 55;
+          const maxHeight = 28;
+          const ratio = Math.min(maxWidth / imgProps.width, maxHeight / imgProps.height);
+          const finalWidth = imgProps.width * ratio;
+          const finalHeight = imgProps.height * ratio;
+          const xOffset = 196 - finalWidth; // Right align with margin
+          const yOffset = 10 + (maxHeight - finalHeight) / 2; // Vertically center in box
+          doc.addImage(base64Logo, 'PNG', xOffset, yOffset, finalWidth, finalHeight, undefined, 'FAST');
         } else {
           doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
           doc.setFontSize(20);
@@ -295,7 +309,7 @@ const QuotationManager = ({ companyId, addToast }) => {
         ]),
         theme: 'grid',
         headStyles: { fillColor: themeColor, textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-        styles: { fontSize: 9, cellPadding: 8, valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.1 },
+        styles: { fontSize: 9, cellPadding: 3, valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.1 },
         columnStyles: { 
           0: { halign: 'center', cellWidth: 15 },
           1: { halign: 'left' },
@@ -334,7 +348,7 @@ const QuotationManager = ({ companyId, addToast }) => {
       doc.text('IVA      :', 130, finalY + 22);
       doc.text(`$${parseFloat(quote.iva || 0).toLocaleString('es-CL')}`, 160, finalY + 22);
 
-      doc.setFillColor(themeColor[0], themeColor[1], themeColor[2]);
+      doc.setFillColor(totalBgColor[0], totalBgColor[1], totalBgColor[2]);
       doc.rect(125, finalY + 27, 71, 10, 'F');
       doc.setTextColor(255, 255, 255);
       doc.text('TOTAL   :', 130, finalY + 34);

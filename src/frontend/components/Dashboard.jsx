@@ -8,7 +8,7 @@ import 'jspdf-autotable';
 import 'jspdf-autotable';
 import { getFinances } from '../services/api';
 
-const Dashboard = ({ companyId }) => {
+const Dashboard = ({ companyId, addToast }) => {
   const [timeRange, setTimeRange] = useState('mensual'); // 'diario', 'semanal', 'mensual'
   
   // Estados para interactividad de gráficos
@@ -95,7 +95,8 @@ const Dashboard = ({ companyId }) => {
     financesData.forEach(tx => {
       if(!tx.date && !tx.fecha) return;
       const dateStr = tx.date || tx.fecha;
-      const date = new Date(dateStr);
+      const parsedDateStr = dateStr.includes(' ') ? dateStr.split(' ')[0] : dateStr;
+      const date = new Date(parsedDateStr + 'T12:00:00');
       const amount = parseFloat(tx.amount || tx.monto) || 0;
       const type = tx.type || tx.tipo;
       const category = tx.category || tx.categoria;

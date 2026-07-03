@@ -18,6 +18,7 @@ import {
 import billyCarLogo from "../../../Logo Villy Car.jpg";
 import j2Logo from "../../../Logfo j2 publicidad.jpeg";
 import tallerLogo from "../../../Logo taller.jpeg";
+import transportesLogo from "../../../Logos/transportes.png";
 
 const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, currentUser, onLogout }) => {
   const companies = [
@@ -83,6 +84,18 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
            </div>
            <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>
              Dwork
+           </span>
+        </div>
+      );
+    }
+    if (currentCompany === '4') {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', animation: 'fadeIn 0.5s ease' }}>
+           <div style={{ backgroundColor: 'white', padding: '8px', borderRadius: '12px', border: '2px solid var(--accent)', marginBottom: '12px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+             <img src={transportesLogo} alt="Transportes J2 Logo" style={{ maxWidth: '100%', maxHeight: '120px', objectFit: 'contain', borderRadius: '4px' }} />
+           </div>
+           <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>
+             Transportes J2
            </span>
         </div>
       );
