@@ -1233,6 +1233,7 @@ const CalendarManager = ({ companyId, addToast }) => {
                     setShowNewClientModal(false);
                     setRutInput(newClientData.nombre);
                     if (newClientData.email) setNewEmail(newClientData.email);
+                    if (newClientData.telefono) setNewPhone(newClientData.telefono);
                     setNewClientData({ rut: '', nombre: '', telefono: '', email: '', direccion: '' });
                     loadData();
                   } catch (e) {
