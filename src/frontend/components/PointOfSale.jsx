@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Plus, Minus, Trash2, Search, CheckCircle, PackageSearch, Save, X, Printer, CreditCard } from 'lucide-react';
-import { getProducts, createSale, createFinanceTx, getCashClosures, saveCashClosure, createQuote, getFinances } from '../services/api';
+import { getProducts, createSale, createFinanceTx, createQuote, getFinances } from '../services/api';
 
 const PointOfSale = ({ companyId, addToast }) => {
   const [cart, setCart] = useState([]);
@@ -21,40 +21,6 @@ const PointOfSale = ({ companyId, addToast }) => {
   const [clientRut, setClientRut] = useState('');
   const [clientName, setClientName] = useState('');
 
-  // Box Open/Close states
-  const [isBoxOpen, setIsBoxOpen] = useState(() => localStorage.getItem('villy_car_box_open') === 'true');
-  const [showOpenBoxModal, setShowOpenBoxModal] = useState(false);
-  const [openBoxAmount, setOpenBoxAmount] = useState(() => localStorage.getItem('villy_car_box_amount') || '');
-  
-  // Quotation states
-  const [showQuotationModal, setShowQuotationModal] = useState(false);
-  const [quoteData, setQuoteData] = useState({ empresa: '', rut: '', telefono: '', descripcion: '' });
-  
-  // Closure states
-  const [showClosureModal, setShowClosureModal] = useState(false);
-  const [closureData, setClosureData] = useState(() => {
-    const saved = localStorage.getItem('villy_car_box_data');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        return { monto_apertura: '', ventas_efectivo_esperado: '', arqueo_efectivo_real: '', notas: '' };
-      }
-    }
-    return {
-      monto_apertura: '',
-      ventas_efectivo_esperado: '',
-      arqueo_efectivo_real: '',
-      notas: ''
-    };
-  });
-  const [isClosing, setIsClosing] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('villy_car_box_open', isBoxOpen);
-    localStorage.setItem('villy_car_box_amount', openBoxAmount);
-    localStorage.setItem('villy_car_box_data', JSON.stringify(closureData));
-  }, [isBoxOpen, openBoxAmount, closureData]);
 
   // Load products from API
   useEffect(() => {
@@ -188,62 +154,7 @@ const PointOfSale = ({ companyId, addToast }) => {
     }
   };
 
-  const handleCashClosure = async () => {
-    setIsClosing(true);
-    try {
-      const apertura = parseFloat(closureData.monto_apertura) || 0;
-      const esperado = parseFloat(closureData.ventas_efectivo_esperado) || 0;
-      const real = parseFloat(closureData.arqueo_efectivo_real) || 0;
-      const descuadre = real - (apertura + esperado);
 
-      const payload = {
-        monto_apertura: apertura,
-        ventas_efectivo_esperado: esperado,
-        arqueo_efectivo_real: real,
-        descuadre,
-        notas: closureData.notas
-      };
-
-      await saveCashClosure(companyId, payload);
-      addToast('Cierre de caja guardado con éxito.', 'success');
-      setShowClosureModal(false);
-      setClosureData({ monto_apertura: '', ventas_efectivo_esperado: '', arqueo_efectivo_real: '', notas: '' });
-      setIsBoxOpen(false); // La caja vuelve a estar cerrada
-    } catch (error) {
-      addToast('Error al realizar el cierre: ' + error.message, 'danger');
-    } finally {
-      setIsClosing(false);
-    }
-  };
-
-  const handleOpenClosureModal = async () => {
-    try {
-      const finanzas = await getFinances(companyId);
-      const hoyStr = new Date().toISOString().split('T')[0];
-      
-      let totalVentasEfectivo = 0;
-      finanzas.forEach(tx => {
-        const txDate = (tx.date || tx.fecha || '').split(' ')[0];
-        const isIngreso = tx.type === 'ingreso' || tx.tipo === 'ingreso';
-        const isPOS = tx.category === 'Ventas POS' || tx.categoria === 'Ventas POS';
-        if (txDate === hoyStr && isIngreso && isPOS) {
-          if ((tx.description || tx.descripcion || '').toLowerCase().includes('efectivo')) {
-             totalVentasEfectivo += parseFloat(tx.amount || tx.monto) || 0;
-          }
-        }
-      });
-      
-      setClosureData({ 
-        ...closureData, 
-        monto_apertura: openBoxAmount || closureData.monto_apertura, 
-        ventas_efectivo_esperado: totalVentasEfectivo 
-      });
-      setShowClosureModal(true);
-    } catch (e) {
-      console.error(e);
-      addToast('Error al obtener ventas del día para el cierre', 'danger');
-    }
-  };
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', gap: '24px', height: 'calc(100vh - 64px)' }}>
@@ -255,21 +166,7 @@ const PointOfSale = ({ companyId, addToast }) => {
             <p style={{ color: 'var(--text-muted)' }}>Selecciona productos para agregar a la venta.</p>
           </div>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            {!isBoxOpen ? (
-              <button 
-                style={{ backgroundColor: 'var(--success)', color: 'white', padding: '10px 16px', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: 'pointer' }}
-                onClick={() => setShowOpenBoxModal(true)}
-              >
-                Abrir Caja
-              </button>
-            ) : (
-              <button 
-                style={{ backgroundColor: 'var(--accent)', color: 'white', padding: '10px 16px', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: 'pointer' }}
-                onClick={handleOpenClosureModal}
-              >
-                Cierre de Caja
-              </button>
-            )}
+
             <div style={{ position: 'relative', width: '300px' }}>
               <Search size={20} style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }} />
               <input type="text" placeholder="Buscar producto..." style={{ width: '100%', paddingLeft: '40px' }} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
@@ -350,9 +247,9 @@ const PointOfSale = ({ companyId, addToast }) => {
           <div style={{ display: 'flex', gap: '8px' }}>
             <button 
               className="btn-primary" 
-              style={{ flex: 1, justifyContent: 'center', opacity: (!isBoxOpen || cart.length === 0) ? 0.5 : 1 }} 
+              style={{ flex: 1, justifyContent: 'center', opacity: cart.length === 0 ? 0.5 : 1 }} 
               onClick={() => setShowCheckout(true)} 
-              disabled={!isBoxOpen || cart.length === 0}
+              disabled={cart.length === 0}
             >
               Cobrar
             </button>
@@ -505,110 +402,6 @@ const PointOfSale = ({ companyId, addToast }) => {
         </div>
       )}
 
-      {/* Modal Cierre de Caja */}
-      {showClosureModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
-          <div className="card animate-fade-in" style={{ width: '450px', borderTop: '4px solid var(--accent)', position: 'relative', padding: '24px' , margin: '0 auto auto auto' }}>
-            <button onClick={() => setShowClosureModal(false)} style={{ position: 'absolute', top: '16px', right: '16px', color: 'var(--text-muted)' }}><X size={20} /></button>
-            <h2 className="title-md" style={{ marginBottom: '8px' }}>Cierre de Caja</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '20px' }}>Registra el arqueo de efectivo del turno actual.</p>
-
-            <div style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Monto de Apertura (Fondo de caja)</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }}>$</span>
-                  <input type="number" style={{ width: '100%', paddingLeft: '28px' }} placeholder="0" value={closureData.monto_apertura} onChange={e => setClosureData({...closureData, monto_apertura: e.target.value})} />
-                </div>
-              </div>
-              
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Ventas en Efectivo (Cálculo automático)</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }}>$</span>
-                  <input type="number" style={{ width: '100%', paddingLeft: '28px', backgroundColor: 'var(--bg-main)', color: 'var(--text-muted)' }} placeholder="0" value={closureData.ventas_efectivo_esperado} readOnly />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Arqueo Real (Efectivo físico contado)</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }}>$</span>
-                  <input type="number" style={{ width: '100%', paddingLeft: '28px' }} placeholder="0" value={closureData.arqueo_efectivo_real} onChange={e => setClosureData({...closureData, arqueo_efectivo_real: e.target.value})} />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Notas o Novedades</label>
-                <textarea style={{ width: '100%', padding: '12px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', borderRadius: '8px', color: 'white', minHeight: '80px' }} placeholder="Ej: Faltan $500 en monedas, se usaron $2000 para pasajes..." value={closureData.notas} onChange={e => setClosureData({...closureData, notas: e.target.value})}></textarea>
-              </div>
-
-              {closureData.monto_apertura !== '' && closureData.arqueo_efectivo_real !== '' && (
-                <div style={{ backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                    <span>Efectivo Esperado (Apertura + Ventas):</span>
-                    <span>${(parseFloat(closureData.monto_apertura || 0) + parseFloat(closureData.ventas_efectivo_esperado || 0)).toLocaleString()}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', paddingTop: '8px', borderTop: '1px solid var(--border)', fontWeight: 600 }}>
-                    <span>Descuadre (Diferencia):</span>
-                    <span style={{ color: (parseFloat(closureData.arqueo_efectivo_real || 0) - (parseFloat(closureData.monto_apertura || 0) + parseFloat(closureData.ventas_efectivo_esperado || 0))) >= 0 ? 'var(--success)' : 'var(--danger)' }}>
-                      ${(parseFloat(closureData.arqueo_efectivo_real || 0) - (parseFloat(closureData.monto_apertura || 0) + parseFloat(closureData.ventas_efectivo_esperado || 0))).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button style={{ flex: 1, padding: '10px', borderRadius: '8px', color: 'var(--text-muted)', border: '1px solid var(--border)' }} onClick={() => setShowClosureModal(false)}>Cancelar</button>
-              <button className="btn-primary" style={{ flex: 2, justifyContent: 'center' }} onClick={handleCashClosure} disabled={isClosing}>
-                {isClosing ? 'Guardando...' : 'Confirmar Cierre'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Abrir Caja */}
-      {showOpenBoxModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
-          <div className="card animate-fade-in" style={{ width: '400px', borderTop: '4px solid var(--success)', position: 'relative', padding: '24px' , margin: 'auto' }}>
-            <button onClick={() => setShowOpenBoxModal(false)} style={{ position: 'absolute', top: '16px', right: '16px', color: 'var(--text-muted)' }}><X size={20} /></button>
-            <h2 className="title-md" style={{ marginBottom: '8px' }}>Apertura de Caja</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '20px' }}>Ingresa el monto base (fondo de caja) para iniciar tu turno.</p>
-
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Monto Inicial ($)</label>
-              <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }}>$</span>
-                <input 
-                  type="number" 
-                  style={{ width: '100%', paddingLeft: '28px' }} 
-                  placeholder="Ej: 50000" 
-                  value={openBoxAmount} 
-                  onChange={e => setOpenBoxAmount(e.target.value)} 
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button style={{ flex: 1, padding: '10px', borderRadius: '8px', color: 'var(--text-muted)', border: '1px solid var(--border)' }} onClick={() => setShowOpenBoxModal(false)}>Cancelar</button>
-              <button 
-                className="btn-success" 
-                style={{ flex: 2, justifyContent: 'center' }} 
-                onClick={() => {
-                  setClosureData(prev => ({ ...prev, monto_apertura: openBoxAmount }));
-                  setIsBoxOpen(true);
-                  setShowOpenBoxModal(false);
-                  addToast('Caja abierta exitosamente. ¡Buen turno!', 'success');
-                }}
-              >
-                Iniciar Turno
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Modal Cotización */}
       {showQuotationModal && (
