@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Plus, Search, Calendar, User, Tag, ArrowRight, ArrowLeft, CheckCircle2, Clock, Edit, Trash2, X } from 'lucide-react';
+import { Plus, Search, Calendar, User, Tag, ArrowRight, ArrowLeft, CheckCircle2, Clock, Edit, Trash2, X, Paperclip } from 'lucide-react';
 import { getWorkOrders, createWorkOrder, updateWorkOrder, deleteWorkOrder, getWorkers } from '../services/api';
 import { UserContext } from '../App';
 
@@ -367,14 +367,15 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                   return (
                     <div style={{ marginTop: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                       {adjuntos.map((url, idx) => (
-                        <div key={idx} style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: 'var(--bg-card)', border: '1px solid var(--accent)', padding: '2px 6px', borderRadius: '4px' }}>
-                          <a href={url} target="_blank" rel="noopener noreferrer" download style={{ fontSize: '0.7rem', color: 'var(--accent)', textDecoration: 'none' }}>
+                        <div key={idx} style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: 'var(--bg-main)', border: '1px solid var(--accent)', padding: '4px 8px', borderRadius: '6px', gap: '6px', transition: 'all 0.2s ease', cursor: 'pointer' }} className="hover-brightness">
+                          <a href={url} target="_blank" rel="noopener noreferrer" download style={{ fontSize: '0.75rem', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '500' }}>
+                            <Paperclip size={12} />
                             Adjunto {idx + 1}
                           </a>
                           {!isWorker && (
                             <button 
                               onClick={(e) => { e.preventDefault(); handleDeleteAttachment(ord.id, idx); }} 
-                              style={{ marginLeft: '4px', background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                              style={{ marginLeft: '2px', background: 'var(--bg-card)', border: '1px solid var(--danger)', borderRadius: '50%', color: 'var(--danger)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '16px', height: '16px', padding: 0 }}
                               title="Eliminar adjunto"
                             >
                               <X size={12} />
