@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Calendar as CalendarIcon, Clock, User, Plus, ChevronLeft, ChevronRight, MapPin, X, FileText, DollarSign, Filter } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Plus, ChevronLeft, ChevronRight, MapPin, X, FileText, DollarSign, Filter, Phone, MessageCircle } from 'lucide-react';
 import { getWorkers, getAgendas, createAgenda, updateAgenda, deleteAgenda, getClients, createWorkOrder, getWorkOrders, updateWorkOrder, createClient } from '../services/api';
 import { UserContext } from '../App';
 
@@ -31,6 +31,7 @@ const CalendarManager = ({ companyId, addToast }) => {
   const [newStatus, setNewStatus] = useState('Agendado');
   const [derivedCompany, setDerivedCompany] = useState('');
   const [newEmail, setNewEmail] = useState('');
+  const [newPhone, setNewPhone] = useState('');
 
   const [view, setView] = useState('month');
   const [filterStatus, setFilterStatus] = useState('Todos');
@@ -57,6 +58,7 @@ const CalendarManager = ({ companyId, addToast }) => {
         realId: e.id,
         title: `[Agenda] ${e.titulo}`,
         client: e.cliente,
+        phone: e.cliente_telefono,
         time: e.hora.slice(0, 5), // remove seconds
         date: e.fecha,
         type: e.tipo,
@@ -199,6 +201,7 @@ const CalendarManager = ({ companyId, addToast }) => {
       titulo: newTitle,
       cliente: rutInput,
       cliente_email: newEmail,
+      cliente_telefono: newPhone,
       fecha: newDate || realTodayStr,
       hora: newTime || '12:00',
       tipo: companyId === '1' ? 'Mecánica' : companyId === '2' ? 'Flete' : companyId === '3' ? 'Oficina' : 'Audio',
@@ -216,7 +219,7 @@ const CalendarManager = ({ companyId, addToast }) => {
       try {
         await createWorkOrder(companyId, {
           cliente_nombre: rutInput,
-          cliente_telefono: '',
+          cliente_telefono: newPhone,
           vehiculo_patente: '',
           vehiculo_modelo: '',
           problema_reportado: newTitle, // We use the agenda title as the work to be done
@@ -248,8 +251,9 @@ const CalendarManager = ({ companyId, addToast }) => {
       setRutInput('');
       setNewDate('');
       setNewTime('');
-      setNewStatus('Agendado');
       setNewEmail('');
+      setNewPhone('');
+      setNewStatus('Agendado');
       setSendEmailReminder(false);
       
       if (workers.length > 0) {
@@ -539,6 +543,11 @@ const CalendarManager = ({ companyId, addToast }) => {
                           } else {
                             setNewEmail('');
                           }
+                          if (c.telefono) {
+                            setNewPhone(c.telefono);
+                          } else {
+                            setNewPhone('');
+                          }
                           setIsRutFocused(false);
                         }}
                         onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-card)'}
@@ -569,6 +578,16 @@ const CalendarManager = ({ companyId, addToast }) => {
                 style={{ width: '100%' }} 
                 value={newEmail}
                 onChange={e => setNewEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)', fontSize: '0.875rem' }}>Teléfono (Opcional)</label>
+              <input 
+                type="tel" 
+                placeholder="Ej: +56912345678" 
+                style={{ width: '100%' }} 
+                value={newPhone}
+                onChange={e => setNewPhone(e.target.value)}
               />
             </div>
             <div>
@@ -986,7 +1005,19 @@ const CalendarManager = ({ companyId, addToast }) => {
             <div style={{ display: 'grid', gap: '16px', backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: '8px', marginBottom: '24px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Cliente</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 500 }}><User size={16} /> {selectedEvent.client}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 500 }}>
+                  <User size={16} /> {selectedEvent.client}
+                </div>
+                {selectedEvent.phone && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
+                    <a href={`tel:${selectedEvent.phone.replace(/[^0-9+]/g, '')}`} style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
+                      <Phone size={14} /> Llamar
+                    </a>
+                    <a href={`https://wa.me/${selectedEvent.phone.replace(/[^0-9+]/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#25D366', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
+                      <MessageCircle size={14} /> WhatsApp
+                    </a>
+                  </div>
+                )}
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Trabajo a Realizar</label>

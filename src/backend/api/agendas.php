@@ -5,6 +5,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 try {
     $pdo->exec("ALTER TABLE agendas ADD COLUMN estado_pago VARCHAR(50) DEFAULT 'pendiente'");
+    $pdo->exec("ALTER TABLE agendas ADD COLUMN cliente_telefono VARCHAR(50) DEFAULT NULL");
 } catch (PDOException $e) {}
 
 if (!$empresa_id) {
@@ -22,6 +23,7 @@ switch ($method) {
     case 'POST':
         $titulo = $inputData['titulo'] ?? '';
         $cliente = $inputData['cliente'] ?? '';
+        $cliente_telefono = $inputData['cliente_telefono'] ?? null;
         $cliente_email = $inputData['cliente_email'] ?? null;
         $fecha = $inputData['fecha'] ?? '';
         $hora = $inputData['hora'] ?? '';
@@ -47,9 +49,9 @@ switch ($method) {
             }
         }
 
-        $stmt = $pdo->prepare("INSERT INTO agendas (empresa_id, titulo, cliente, cliente_email, fecha, hora, tipo, monto, detalles, estado, trabajador, alerta_enviada, estado_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO agendas (empresa_id, titulo, cliente, cliente_telefono, cliente_email, fecha, hora, tipo, monto, detalles, estado, trabajador, alerta_enviada, estado_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         try {
-            $stmt->execute([$empresa_id, $titulo, $cliente, $cliente_email, $fecha, $hora, $tipo, $monto, $detalles, $estado, $trabajador, $alerta_enviada, $estado_pago]);
+            $stmt->execute([$empresa_id, $titulo, $cliente, $cliente_telefono, $cliente_email, $fecha, $hora, $tipo, $monto, $detalles, $estado, $trabajador, $alerta_enviada, $estado_pago]);
             $inputData['id'] = $pdo->lastInsertId();
             $inputData['alerta_enviada'] = $alerta_enviada;
             responseJson($inputData, 201);
@@ -64,6 +66,7 @@ switch ($method) {
 
         $titulo = $inputData['titulo'] ?? '';
         $cliente = $inputData['cliente'] ?? '';
+        $cliente_telefono = $inputData['cliente_telefono'] ?? null;
         $cliente_email = $inputData['cliente_email'] ?? null;
         $fecha = $inputData['fecha'] ?? '';
         $hora = $inputData['hora'] ?? '';
@@ -74,9 +77,9 @@ switch ($method) {
         $trabajador = $inputData['trabajador'] ?? '';
         $estado_pago = $inputData['estado_pago'] ?? 'pendiente';
 
-        $stmt = $pdo->prepare("UPDATE agendas SET titulo=?, cliente=?, cliente_email=?, fecha=?, hora=?, tipo=?, monto=?, detalles=?, estado=?, trabajador=?, estado_pago=? WHERE id=? AND empresa_id=?");
+        $stmt = $pdo->prepare("UPDATE agendas SET titulo=?, cliente=?, cliente_telefono=?, cliente_email=?, fecha=?, hora=?, tipo=?, monto=?, detalles=?, estado=?, trabajador=?, estado_pago=? WHERE id=? AND empresa_id=?");
         try {
-            $stmt->execute([$titulo, $cliente, $cliente_email, $fecha, $hora, $tipo, $monto, $detalles, $estado, $trabajador, $estado_pago, $id, $empresa_id]);
+            $stmt->execute([$titulo, $cliente, $cliente_telefono, $cliente_email, $fecha, $hora, $tipo, $monto, $detalles, $estado, $trabajador, $estado_pago, $id, $empresa_id]);
             responseJson($inputData);
         } catch (PDOException $e) {
             responseJson(["error" => "Error al actualizar agenda", "details" => $e->getMessage()], 500);
