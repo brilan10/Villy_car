@@ -709,8 +709,35 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Adjuntar Nuevos Archivos</label>
-                  <input type="file" multiple onChange={e => setEditFiles(Array.from(e.target.files))} style={{ width: '100%', color: 'white' }} />
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Archivos Adjuntos</label>
+                  {(() => {
+                    let adj = [];
+                    if (typeof editingOrder.archivos === 'string') {
+                      try { adj = JSON.parse(editingOrder.archivos) || []; } catch(e){}
+                    } else if (Array.isArray(editingOrder.archivos)) {
+                      adj = editingOrder.archivos;
+                    }
+                    if (adj && adj.length > 0) {
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                          {adj.map((url, idx) => (
+                            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', padding: '8px 12px', borderRadius: '8px' }}>
+                              <span style={{ fontSize: '0.85rem', color: 'white', display: 'flex', alignItems: 'center', gap: '8px' }}><Paperclip size={14} /> Adjunto {idx + 1}</span>
+                              <button type="button" onClick={() => {
+                                const newAdj = [...adj];
+                                newAdj.splice(idx, 1);
+                                setEditingOrder({...editingOrder, archivos: JSON.stringify(newAdj)});
+                              }} style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '4px' }} title="Eliminar adjunto">
+                                <X size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+                  <input type="file" multiple onChange={e => setEditFiles(Array.from(e.target.files))} style={{ width: '100%', color: 'white', backgroundColor: 'var(--bg-main)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
                 </div>
               </>
             )}

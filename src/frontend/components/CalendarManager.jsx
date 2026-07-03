@@ -71,36 +71,8 @@ const CalendarManager = ({ companyId, addToast }) => {
         }
       };
       
-      // Fetch Work Orders
-      const fetchedOrders = await getWorkOrders(companyId);
-      const formattedOrders = fetchedOrders.map(o => {
-        const dateTime = o.fecha_ingreso ? o.fecha_ingreso.split(' ') : ['', ''];
-        
-        let detailsText = `${getLabels().labelCard}: ${o.vehiculo_modelo !== 'N/A' && o.vehiculo_modelo ? o.vehiculo_modelo : 'N/A'}`;
-        if (o.vehiculo_patente && o.vehiculo_patente !== 'N/A') {
-            detailsText += ` - ${getLabels().patente}: ${o.vehiculo_patente}`;
-        }
-        detailsText += `\nTeléfono: ${o.cliente_telefono || 'N/A'}`;
-
-        return {
-          id: `order_${o.id}`,
-          realId: o.id,
-          title: `[OT] ${o.problema_reportado}`,
-          client: o.cliente_nombre,
-          time: dateTime[1] ? dateTime[1].slice(0, 5) : '12:00',
-          date: dateTime[0],
-          type: o.area_asignada || 'Servicio',
-          amount: o.total_estimado || 0,
-          details: detailsText,
-          status: o.estado === 'en_reparacion' ? 'En Producción' : 
-                 (o.estado === 'completado' || o.estado === 'entregado') ? 'Finalizado' :
-                 (o.estado === 'en_revision') ? 'En Revisión' : 'Agendado',
-          worker: o.trabajador_asignado,
-          isOrder: true
-        };
-      });
-
-      setEvents([...formattedAgendas, ...formattedOrders]);
+      const allEvents = [...formattedAgendas];
+      setEvents(allEvents);
 
       const allClients = await getClients(companyId); // Backend ignores companyId for clients now
       setClientsList(allClients.map(c => ({ rut: c.rut, name: c.nombre, email: c.email })));
