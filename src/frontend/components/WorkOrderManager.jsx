@@ -283,7 +283,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     if (!dateStr) return false;
     const d = new Date();
     const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    return dateStr.startsWith(today) || dateStr.startsWith('2026-06-05'); // Using fixed date for simulation matching calendar
+    return dateStr.startsWith(today);
   };
 
   const filteredOrders = orders.filter(ord => {
