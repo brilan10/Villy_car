@@ -35,6 +35,7 @@ const CalendarManager = ({ companyId, addToast }) => {
 
   const [view, setView] = useState('month');
   const [filterStatus, setFilterStatus] = useState('Todos');
+  const [filterWorker, setFilterWorker] = useState('Todos');
   const [draggedEvent, setDraggedEvent] = useState(null);
   
   const [isRescheduling, setIsRescheduling] = useState(false);
@@ -337,7 +338,16 @@ const CalendarManager = ({ companyId, addToast }) => {
     }
 
     // 4. Status filter
-    return filterStatus === 'Todos' || e.status === filterStatus;
+    if (filterStatus !== 'Todos' && e.status !== filterStatus) {
+      return false;
+    }
+
+    // 5. Worker filter (si no es trabajador, o si lo es, ya se filtró arriba)
+    if (filterWorker !== 'Todos' && e.worker !== filterWorker) {
+      return false;
+    }
+
+    return true;
   });
 
   const getEventCard = (event) => {
@@ -434,8 +444,9 @@ const CalendarManager = ({ companyId, addToast }) => {
               </button>
             </div>
             
-            <div style={{ marginTop: '12px', position: 'relative' }}>
-              <input
+            <div style={{ marginTop: '12px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div style={{ position: 'relative' }}>
+                <input
                 type="text"
                 placeholder="Filtrar por cliente o estado..."
                 value={agendaSearchTerm}
@@ -478,6 +489,20 @@ const CalendarManager = ({ companyId, addToast }) => {
                     </div>
                   )}
                 </div>
+              )}
+              </div>
+
+              {!isWorker && workers.length > 0 && (
+                <select 
+                  value={filterWorker} 
+                  onChange={e => setFilterWorker(e.target.value)}
+                  style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: 'white', cursor: 'pointer' }}
+                >
+                  <option value="Todos">Todos los Trabajadores</option>
+                  {workers.map(w => (
+                    <option key={w.rut} value={w.name}>{w.name}</option>
+                  ))}
+                </select>
               )}
             </div>
           </div>
