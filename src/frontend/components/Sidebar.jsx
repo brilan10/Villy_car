@@ -32,7 +32,6 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'analytics', label: 'Analítica', icon: BarChart2 },
     { id: 'calendar', label: 'Agenda / Turnos', icon: Calendar },
-    { id: 'pos', label: 'Punto de Venta', icon: ShoppingCart },
     { id: 'quotes', label: 'Cotizaciones', icon: FileText },
     { id: 'clients', label: 'Cartera de Clientes', icon: Users },
     { id: 'products', label: 'Mantenedor Productos', icon: PackageSearch },
