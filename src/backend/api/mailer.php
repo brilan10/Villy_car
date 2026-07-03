@@ -36,6 +36,7 @@ function enviarCorreoAlerta($email, $cliente, $titulo, $fecha, $hora, $empresa_i
         $mail->Password   = 'wwndarggwvurkmgh';    // Contraseña de Aplicación de Google
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
+        $mail->Timeout    = 5; // 5 seconds timeout to prevent hanging
         
         // Remitente y Destinatario
         $mail->setFrom('villycar7@gmail.com', "Sistema de Agendas $nombre_empresa");

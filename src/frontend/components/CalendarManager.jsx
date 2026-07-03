@@ -41,6 +41,7 @@ const CalendarManager = ({ companyId, addToast }) => {
   const [rescheduleTime, setRescheduleTime] = useState('');
 
   const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 1));
+  const [isSaving, setIsSaving] = useState(false);
 
   const loadData = async () => {
     try {
@@ -185,6 +186,8 @@ const CalendarManager = ({ companyId, addToast }) => {
       addToast('Por favor complete el nombre del trabajo y el cliente.', 'warning');
       return;
     }
+    
+    setIsSaving(true);
 
     const payload = {
       titulo: newTitle,
@@ -252,6 +255,8 @@ const CalendarManager = ({ companyId, addToast }) => {
       }
     } catch (error) {
       addToast('Error al guardar: ' + error.message, 'danger');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -711,7 +716,7 @@ const CalendarManager = ({ companyId, addToast }) => {
           </div>
           <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
             <button style={{ padding: '10px 20px', borderRadius: '8px', color: 'var(--text-muted)' }} onClick={() => setShowForm(false)}>Cancelar</button>
-            <button className="btn-success" onClick={handleSave}>Confirmar Turno</button>
+            <button className="btn-success" onClick={handleSave} disabled={isSaving}>{isSaving ? 'Guardando y enviando...' : 'Confirmar Turno'}</button>
           </div>
         </div>
       )}
