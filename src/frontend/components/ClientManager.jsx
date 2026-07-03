@@ -104,9 +104,10 @@ const ClientManager = ({ companyId, addToast }) => {
     }
   };
 
+  const cleanSearchTerm = searchTerm.replace(/[\.\-]/g, '').toLowerCase();
   const filteredClients = clients.filter(c => 
-    (c.nombre && c.nombre.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (c.rut && c.rut.toLowerCase().includes(searchTerm.toLowerCase()))
+    (c.nombre && c.nombre.toLowerCase().includes(cleanSearchTerm)) ||
+    (c.rut && c.rut.replace(/[\.\-]/g, '').toLowerCase().includes(cleanSearchTerm))
   );
 
 

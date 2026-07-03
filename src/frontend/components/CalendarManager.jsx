@@ -84,7 +84,7 @@ const CalendarManager = ({ companyId, addToast }) => {
       setEvents(allEvents);
 
       const allClients = await getClients(companyId); // Backend ignores companyId for clients now
-      setClientsList(allClients.map(c => ({ rut: c.rut, name: c.nombre, email: c.email })));
+      setClientsList(allClients.map(c => ({ rut: c.rut, name: c.nombre, email: c.email, telefono: c.telefono })));
 
       const dataWorkers = await getWorkers(companyId);
       const formattedWorkers = dataWorkers.map(w => ({
@@ -527,11 +527,15 @@ const CalendarManager = ({ companyId, addToast }) => {
                     maxHeight: '200px', overflowY: 'auto'
                   }}>
                     {clientsList.filter(c => {
+                      const cleanSearch = rutInput.replace(/[\.\-]/g, '').toLowerCase();
+                      const cleanRut = (c.rut || '').replace(/[\.\-]/g, '').toLowerCase();
+                      const clientName = (c.name || '').toLowerCase();
+                      
                       // Si el input es exactamente el RUT de un cliente ya seleccionado, mostramos todos para poder elegir otro fácilmente
-                      const exactMatch = clientsList.some(client => client.rut === rutInput);
+                      const exactMatch = clientsList.some(client => (client.rut || '').replace(/[\.\-]/g, '').toLowerCase() === cleanSearch && cleanSearch !== '');
                       if (exactMatch) return true;
                       
-                      return c.rut.includes(rutInput) || (c.name && c.name.toLowerCase().includes(rutInput.toLowerCase()));
+                      return cleanRut.includes(cleanSearch) || clientName.includes(cleanSearch);
                     }).map((c, idx, arr) => (
                       <div
                         key={c.rut}
@@ -1008,16 +1012,23 @@ const CalendarManager = ({ companyId, addToast }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 500 }}>
                   <User size={16} /> {selectedEvent.client}
                 </div>
-                {selectedEvent.phone && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
-                    <a href={`tel:${selectedEvent.phone.replace(/[^0-9+]/g, '')}`} style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
-                      <Phone size={14} /> Llamar
-                    </a>
-                    <a href={`https://wa.me/${selectedEvent.phone.replace(/[^0-9+]/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#25D366', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
-                      <MessageCircle size={14} /> WhatsApp
-                    </a>
-                  </div>
-                )}
+                {(() => {
+                  const phoneToShow = selectedEvent.phone || (clientsList.find(c => (c.name || '').toLowerCase() === (selectedEvent.client || '').toLowerCase() || c.rut === selectedEvent.client)?.telefono);
+                  if (!phoneToShow) return null;
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.875rem', color: 'var(--text-main)', fontWeight: 500 }}>
+                        {phoneToShow}
+                      </div>
+                      <a href={`tel:${phoneToShow.replace(/[^0-9+]/g, '')}`} style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
+                        <Phone size={14} /> Llamar
+                      </a>
+                      <a href={`https://wa.me/${phoneToShow.replace(/[^0-9+]/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#25D366', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>
+                        <MessageCircle size={14} /> WhatsApp
+                      </a>
+                    </div>
+                  );
+                })()}
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Trabajo a Realizar</label>
