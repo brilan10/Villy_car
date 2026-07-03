@@ -6,6 +6,7 @@ import { UserContext } from '../App';
 const WorkOrderManager = ({ companyId, addToast }) => {
   const { currentUser } = useContext(UserContext);
   const isWorker = currentUser?.rol === 'trabajador';
+  const isAdmin = currentUser?.rol === 'admin';
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('Todos');
@@ -19,6 +20,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [bitacoraProgress, setBitacoraProgress] = useState(0);
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editFiles, setEditFiles] = useState([]);
 
   // Form states
   const [newClient, setNewClient] = useState('');
@@ -73,6 +75,12 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     if (currentIndex === -1) currentIndex = 0; // Fallback
     
     let nextIndex = currentIndex + direction;
+    
+    // Solo el admin puede retroceder
+    if (direction === -1 && !isAdmin) {
+      addToast('Solo los administradores pueden retroceder una orden', 'danger');
+      return;
+    }
     
     // Skip 'en_revision' to ensure visual column change (since ingresado and en_revision are in the same column)
     if (direction === 1 && (ord.estado === 'ingresado' || ord.estado === 'en_revision')) {
@@ -191,9 +199,34 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const handleUpdateOrder = async (e) => {
     e.preventDefault();
     try {
-      await updateWorkOrder(companyId, editingOrder);
+      let updatedOrder = { ...editingOrder };
+      
+      if (editFiles && editFiles.length > 0) {
+        let newArchivosUrls = [];
+        for (let file of editFiles) {
+           const formData = new FormData();
+           formData.append('documento', file);
+           const uploadRes = await fetch('/backend/upload_document.php', { method: 'POST', body: formData });
+           const resJson = await uploadRes.json();
+           if (resJson.success) {
+               newArchivosUrls.push(resJson.archivo_url);
+           }
+        }
+        
+        let existingArchivos = [];
+        if (typeof updatedOrder.archivos === 'string') {
+          try { existingArchivos = JSON.parse(updatedOrder.archivos) || []; } catch(e){}
+        } else if (Array.isArray(updatedOrder.archivos)) {
+          existingArchivos = updatedOrder.archivos;
+        }
+        
+        updatedOrder.archivos = JSON.stringify([...existingArchivos, ...newArchivosUrls]);
+      }
+
+      await updateWorkOrder(companyId, updatedOrder);
       addToast('Orden actualizada exitosamente.', 'success');
       setEditingOrder(null);
+      setEditFiles([]);
       loadData();
     } catch (error) {
       addToast('Error al actualizar orden: ' + error.message, 'danger');
@@ -404,7 +437,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                   )}
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button onClick={() => moveOrder(ord.id, -1)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', color: 'var(--text-muted)' }} disabled={ord.estado === 'ingresado'}>
+                  <button onClick={() => moveOrder(ord.id, -1)} style={{ padding: '4px', borderRadius: '4px', backgroundColor: 'var(--bg-main)', color: 'var(--text-muted)' }} disabled={ord.estado === 'ingresado' || !isAdmin}>
                     <ArrowLeft size={16} />
                   </button>
                   <button 
@@ -657,21 +690,29 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                 </ul>
               )}
             </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Colaborador Asignado</label>
-              <select value={editingOrder.trabajador_asignado || ''} onChange={e => setEditingOrder({...editingOrder, trabajador_asignado: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }}>
-                <option value="">-- Sin Asignar --</option>
-                {workers.map(w => (
-                  <option key={w.id} value={w.nombre}>{w.nombre} ({w.cargo || 'Trabajador'})</option>
-                ))}
-              </select>
-            </div>
+            {isAdmin && (
+              <>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Colaborador Asignado</label>
+                  <select value={editingOrder.trabajador_asignado || ''} onChange={e => setEditingOrder({...editingOrder, trabajador_asignado: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white' }}>
+                    <option value="">-- Sin Asignar --</option>
+                    {workers.map(w => (
+                      <option key={w.id} value={w.nombre}>{w.nombre} ({w.cargo || 'Trabajador'})</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Adjuntar Nuevos Archivos</label>
+                  <input type="file" multiple onChange={e => setEditFiles(Array.from(e.target.files))} style={{ width: '100%', color: 'white' }} />
+                </div>
+              </>
+            )}
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Problema Reportado / Trabajo a realizar *</label>
               <textarea value={editingOrder.problema_reportado || ''} onChange={e => setEditingOrder({...editingOrder, problema_reportado: e.target.value})} required style={{ width: '100%', height: '80px', padding: '10px' }} />
             </div>
             <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '12px' }}>
-              <button type="button" style={{ padding: '10px 20px', borderRadius: '8px', color: 'var(--text-muted)', border: '1px solid var(--border)' }} onClick={() => setEditingOrder(null)}>Cancelar</button>
+              <button type="button" style={{ padding: '10px 20px', borderRadius: '8px', color: 'var(--text-muted)', border: '1px solid var(--border)' }} onClick={() => { setEditingOrder(null); setEditFiles([]); }}>Cancelar</button>
               <button type="submit" style={{ color: 'white', backgroundColor: '#f59e0b', padding: '10px 20px', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: 'pointer' }}>Guardar Cambios</button>
             </div>
           </form>
