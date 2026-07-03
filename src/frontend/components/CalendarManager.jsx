@@ -382,7 +382,8 @@ const CalendarManager = ({ companyId, addToast }) => {
   };
 
   return (
-    <div className="animate-fade-in" style={{ paddingBottom: '40px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <>
+      <div className="animate-fade-in" style={{ paddingBottom: '40px', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
           <h1 className="title-lg" style={{ marginBottom: '8px' }}>Calendario Operativo</h1>
@@ -482,53 +483,6 @@ const CalendarManager = ({ companyId, addToast }) => {
         </button>
       </div>
 
-      {showNewClientModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="card animate-fade-in" style={{ width: '400px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', padding: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 className="title-md">Nuevo Cliente</h3>
-              <button onClick={() => setShowNewClientModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>RUT *</label>
-                <input type="text" value={newClientData.rut} onChange={e => setNewClientData({...newClientData, rut: e.target.value})} style={{ width: '100%' }} placeholder="Ej: 11.111.111-1" />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Nombre *</label>
-                <input type="text" value={newClientData.nombre} onChange={e => setNewClientData({...newClientData, nombre: e.target.value})} style={{ width: '100%' }} placeholder="Nombre completo" />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Correo Electrónico</label>
-                <input type="email" value={newClientData.email} onChange={e => setNewClientData({...newClientData, email: e.target.value})} style={{ width: '100%' }} placeholder="cliente@correo.com" />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '12px' }}>
-                <button onClick={() => setShowNewClientModal(false)} style={{ padding: '8px 16px', borderRadius: '8px', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>Cancelar</button>
-                <button className="btn-success" disabled={isSavingClient} onClick={async () => {
-                  if (!newClientData.rut || !newClientData.nombre) {
-                    addToast('El RUT y el nombre son obligatorios', 'warning');
-                    return;
-                  }
-                  setIsSavingClient(true);
-                  try {
-                    await createClient(companyId, newClientData);
-                    addToast('Cliente guardado exitosamente', 'success');
-                    setShowNewClientModal(false);
-                    setRutInput(newClientData.nombre);
-                    if (newClientData.email) setNewEmail(newClientData.email);
-                    setNewClientData({ rut: '', nombre: '', telefono: '', email: '', direccion: '' });
-                    loadData();
-                  } catch (e) {
-                    addToast('Error al guardar cliente: ' + e.message, 'danger');
-                  } finally {
-                    setIsSavingClient(false);
-                  }
-                }}>{isSavingClient ? 'Guardando...' : 'Guardar Cliente'}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {showForm && (
         <div className="card animate-fade-in" style={{ marginBottom: '24px', borderLeft: '4px solid var(--accent)' , margin: 'auto' }}>
@@ -1213,6 +1167,55 @@ const CalendarManager = ({ companyId, addToast }) => {
       )}
 
     </div>
+    
+      {showNewClientModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'flex-start', paddingTop: '10vh', justifyContent: 'center' }}>
+          <div className="card animate-fade-in" style={{ width: '400px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 className="title-md">Nuevo Cliente</h3>
+              <button onClick={() => setShowNewClientModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>RUT *</label>
+                <input type="text" value={newClientData.rut} onChange={e => setNewClientData({...newClientData, rut: e.target.value})} style={{ width: '100%' }} placeholder="Ej: 11.111.111-1" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Nombre *</label>
+                <input type="text" value={newClientData.nombre} onChange={e => setNewClientData({...newClientData, nombre: e.target.value})} style={{ width: '100%' }} placeholder="Nombre completo" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Correo Electrónico</label>
+                <input type="email" value={newClientData.email} onChange={e => setNewClientData({...newClientData, email: e.target.value})} style={{ width: '100%' }} placeholder="cliente@correo.com" />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '12px' }}>
+                <button onClick={() => setShowNewClientModal(false)} style={{ padding: '8px 16px', borderRadius: '8px', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>Cancelar</button>
+                <button className="btn-success" disabled={isSavingClient} onClick={async () => {
+                  if (!newClientData.rut || !newClientData.nombre) {
+                    addToast('El RUT y el nombre son obligatorios', 'warning');
+                    return;
+                  }
+                  setIsSavingClient(true);
+                  try {
+                    await createClient(companyId, newClientData);
+                    addToast('Cliente guardado exitosamente', 'success');
+                    setShowNewClientModal(false);
+                    setRutInput(newClientData.nombre);
+                    if (newClientData.email) setNewEmail(newClientData.email);
+                    setNewClientData({ rut: '', nombre: '', telefono: '', email: '', direccion: '' });
+                    loadData();
+                  } catch (e) {
+                    addToast('Error al guardar cliente: ' + e.message, 'danger');
+                  } finally {
+                    setIsSavingClient(false);
+                  }
+                }}>{isSavingClient ? 'Guardando...' : 'Guardar Cliente'}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
