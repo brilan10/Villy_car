@@ -38,18 +38,12 @@ switch ($method) {
 
         $alerta_enviada = 0;
         
-        // Immediate email logic if appointment is soon (within 1 hour)
+        // Send email immediately as a confirmation
         if ($cliente_email) {
-            $appointment_time = strtotime("$fecha $hora");
-            $current_time = time();
-            $time_diff = $appointment_time - $current_time;
-            
-            if ($time_diff <= 3600 && $time_diff >= -600) {
-                require_once 'mailer.php';
-                $enviado = enviarCorreoAlerta($cliente_email, $cliente, $titulo, $fecha, $hora, $empresa_id);
-                if ($enviado) {
-                    $alerta_enviada = 1;
-                }
+            require_once 'mailer.php';
+            $enviado = enviarCorreoAlerta($cliente_email, $cliente, $titulo, $fecha, $hora, $empresa_id);
+            if ($enviado) {
+                $alerta_enviada = 1;
             }
         }
 

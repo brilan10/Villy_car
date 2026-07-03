@@ -1126,12 +1126,7 @@ const CalendarManager = ({ companyId, addToast }) => {
               <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: 'var(--text-main)' }}>{selectedEvent.details}</p>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-              <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Monto Presupuestado</span>
-              <span style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <DollarSign size={20} /> ${selectedEvent.amount}
-              </span>
-            </div>
+
 
             <div style={{ marginTop: '24px' }}>
               {!checkoutStep ? (

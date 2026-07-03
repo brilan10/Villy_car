@@ -44,12 +44,12 @@ function enviarCorreoAlerta($email, $cliente, $titulo, $fecha, $hora, $empresa_i
         // Contenido
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
-        $mail->Subject = "Recordatorio de Cita: $titulo";
+        $mail->Subject = "Confirmación de Cita: $titulo";
         
         $message = "
         <html>
         <head>
-          <title>Recordatorio de Cita</title>
+          <title>Confirmación de Cita</title>
           <style>
             body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
             .container { background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
@@ -64,11 +64,11 @@ function enviarCorreoAlerta($email, $cliente, $titulo, $fecha, $hora, $empresa_i
         <body>
           <div class='container'>
             <div class='header'>
-              <h2>Recordatorio de Cita</h2>
+              <h2>Confirmación de Cita</h2>
             </div>
             <div class='content'>
               <p>Hola <strong>$cliente</strong>,</p>
-              <p>Este es un recordatorio automático de que tienes una cita programada próximamente con nosotros.</p>
+              <p>Este es un mensaje automático confirmando que tu cita ha sido programada con nosotros.</p>
               
               <div class='details'>
                 <ul>
@@ -88,7 +88,7 @@ function enviarCorreoAlerta($email, $cliente, $titulo, $fecha, $hora, $empresa_i
         ";
         
         $mail->Body = $message;
-        $mail->AltBody = "Hola $cliente,\n\nEste es un recordatorio de tu cita programada.\n\nServicio: $titulo\nFecha: $fecha\nHora: $hora\n\nTe esperamos.\n\n$nombre_empresa.";
+        $mail->AltBody = "Hola $cliente,\n\nEste es un mensaje de confirmación de tu cita programada.\n\nServicio: $titulo\nFecha: $fecha\nHora: $hora\n\nTe esperamos.\n\n$nombre_empresa.";
 
         $mail->send();
         return true;
