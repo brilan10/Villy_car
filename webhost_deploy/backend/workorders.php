@@ -6,6 +6,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN estado_pago VARCHAR(50) DEFAULT 'pendiente'"); } catch (PDOException $e) {}
 try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN bitacora JSON DEFAULT NULL"); } catch (PDOException $e) {}
 try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN porcentaje_avance INT DEFAULT 0"); } catch (PDOException $e) {}
+try { $pdo->exec("ALTER TABLE ordenes_trabajo ADD COLUMN archivos TEXT DEFAULT NULL"); } catch (PDOException $e) {}
 
 if (!$empresa_id) {
     responseJson(["error" => "empresa_id es requerido"], 400);
@@ -65,6 +66,10 @@ switch ($method) {
                 $upd->execute([$newStatus, $ao['id']]);
             }
         }
+
+        // Auto-limpieza de archivos de ordenes entregadas hace mas de 30 dias
+        $thirtyDaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
+        $pdo->query("UPDATE ordenes_trabajo SET archivos = NULL WHERE estado = 'entregado' AND fecha_entrega < '$thirtyDaysAgo' AND archivos IS NOT NULL");
 
         $stmt = $pdo->prepare("SELECT * FROM ordenes_trabajo WHERE empresa_id = ? ORDER BY fecha_ingreso DESC");
         $stmt->execute([$empresa_id]);

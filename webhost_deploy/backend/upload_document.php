@@ -12,7 +12,7 @@ if (!isset($_FILES['documento']) || $_FILES['documento']['error'] !== UPLOAD_ERR
 }
 
 // Crear directorio si no existe
-$uploadDir = __DIR__ . '/../../uploads/nomina/';
+$uploadDir = __DIR__ . '/uploads/nomina/';
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
@@ -25,7 +25,7 @@ $targetFilePath = $uploadDir . $fileName;
 // Mover el archivo
 if (move_uploaded_file($_FILES['documento']['tmp_name'], $targetFilePath)) {
     // Retornar la URL relativa para guardarla en BD
-    $fileUrl = '/uploads/nomina/' . $fileName;
+    $fileUrl = '/backend/uploads/nomina/' . $fileName;
     responseJson(["success" => true, "archivo_url" => $fileUrl]);
 } else {
     responseJson(["error" => "Error al mover el archivo al directorio de destino"], 500);

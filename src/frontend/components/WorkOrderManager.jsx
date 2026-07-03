@@ -14,6 +14,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
   const [showBitacoraModal, setShowBitacoraModal] = useState(null);
+  const [confirmAction, setConfirmAction] = useState(null);
   const [bitacoraText, setBitacoraText] = useState('');
   const [bitacoraProgress, setBitacoraProgress] = useState(0);
   const [workers, setWorkers] = useState([]);
@@ -103,25 +104,26 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     }
   };
 
-  const handleDeleteAttachment = async (ordId, attachIdx) => {
-    if (!window.confirm("¿Seguro que deseas eliminar este adjunto?")) return;
-    try {
-      const ord = orders.find(o => o.id === ordId);
-      let adjuntos = [];
-      if (typeof ord.archivos === 'string') adjuntos = JSON.parse(ord.archivos);
-      else if (Array.isArray(ord.archivos)) adjuntos = ord.archivos;
-      
-      adjuntos.splice(attachIdx, 1); // Remover el archivo
-      
-      await updateWorkOrder(companyId, {
-        id: ordId,
-        archivos: JSON.stringify(adjuntos)
-      });
-      addToast('Adjunto eliminado con éxito.', 'success');
-      loadData();
-    } catch (e) {
-      addToast('Error al eliminar adjunto', 'danger');
-    }
+  const handleDeleteAttachment = (ordId, attachIdx) => {
+    setConfirmAction({
+      message: '¿Estás seguro de que deseas eliminar este adjunto?',
+      onConfirm: async () => {
+        try {
+          const ord = orders.find(o => o.id === ordId);
+          let adjuntos = [];
+          if (typeof ord.archivos === 'string') adjuntos = JSON.parse(ord.archivos);
+          else if (Array.isArray(ord.archivos)) adjuntos = ord.archivos;
+          
+          adjuntos.splice(attachIdx, 1);
+          
+          await updateWorkOrder(companyId, { id: ordId, archivos: JSON.stringify(adjuntos) });
+          addToast('Adjunto eliminado con éxito.', 'success');
+          loadData();
+        } catch (e) {
+          addToast('Error al eliminar adjunto', 'danger');
+        }
+      }
+    });
   };
 
   const handleAddOrder = async (e) => {
@@ -198,16 +200,19 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     }
   };
 
-  const handleDeleteOrder = async (id) => {
-    if(window.confirm('¿Estás seguro de que deseas eliminar esta orden?')) {
-      try {
-        await deleteWorkOrder(companyId, id);
-        addToast('Orden eliminada exitosamente.', 'success');
-        loadData();
-      } catch(error) {
-        addToast('Error al eliminar orden: ' + error.message, 'danger');
+  const handleDeleteOrder = (id) => {
+    setConfirmAction({
+      message: '¿Estás seguro de que deseas eliminar esta orden? Esta acción no se puede deshacer.',
+      onConfirm: async () => {
+        try {
+          await deleteWorkOrder(companyId, id);
+          addToast('Orden eliminada exitosamente.', 'success');
+          loadData();
+        } catch(error) {
+          addToast('Error al eliminar orden: ' + error.message, 'danger');
+        }
       }
-    }
+    });
   };
 
   const handleSaveBitacora = async (e) => {
@@ -363,7 +368,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                     <div style={{ marginTop: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                       {adjuntos.map((url, idx) => (
                         <div key={idx} style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: 'var(--bg-card)', border: '1px solid var(--accent)', padding: '2px 6px', borderRadius: '4px' }}>
-                          <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.7rem', color: 'var(--accent)', textDecoration: 'none' }}>
+                          <a href={url} target="_blank" rel="noopener noreferrer" download style={{ fontSize: '0.7rem', color: 'var(--accent)', textDecoration: 'none' }}>
                             Adjunto {idx + 1}
                           </a>
                           {!isWorker && (
@@ -749,6 +754,20 @@ const WorkOrderManager = ({ companyId, addToast }) => {
           </div>
         );
       })()}
+
+      {confirmAction && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 2000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
+          <div className="card animate-fade-in" style={{ width: '400px', borderTop: '4px solid var(--danger)', position: 'relative', padding: '24px' , margin: 'auto' }}>
+            <button onClick={() => setConfirmAction(null)} style={{ position: 'absolute', top: '16px', right: '16px', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}><X size={20} /></button>
+            <h3 className="title-md" style={{ marginBottom: '16px', color: 'white' }}>Confirmar Acción</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '24px', lineHeight: '1.5' }}>{confirmAction.message}</p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button onClick={() => setConfirmAction(null)} style={{ padding: '8px 16px', borderRadius: '8px', color: 'white', border: '1px solid var(--border)', background: 'transparent' }}>Cancelar</button>
+              <button onClick={() => { confirmAction.onConfirm(); setConfirmAction(null); }} className="btn-danger" style={{ padding: '8px 16px', borderRadius: '8px' }}>Sí, eliminar</button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
