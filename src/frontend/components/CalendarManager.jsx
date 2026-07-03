@@ -40,7 +40,10 @@ const CalendarManager = ({ companyId, addToast }) => {
   const [rescheduleDate, setRescheduleDate] = useState('');
   const [rescheduleTime, setRescheduleTime] = useState('');
 
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 1));
+  const realToday = new Date();
+  const realTodayStr = `${realToday.getFullYear()}-${String(realToday.getMonth() + 1).padStart(2, '0')}-${String(realToday.getDate()).padStart(2, '0')}`;
+  
+  const [currentDate, setCurrentDate] = useState(new Date(realToday.getFullYear(), realToday.getMonth(), 1));
   const [isSaving, setIsSaving] = useState(false);
   const [showNewClientModal, setShowNewClientModal] = useState(false);
   const [newClientData, setNewClientData] = useState({ rut: '', nombre: '', telefono: '', email: '', direccion: '' });
@@ -196,7 +199,7 @@ const CalendarManager = ({ companyId, addToast }) => {
       titulo: newTitle,
       cliente: rutInput,
       cliente_email: newEmail,
-      fecha: newDate || '2026-06-05',
+      fecha: newDate || realTodayStr,
       hora: newTime || '12:00',
       tipo: companyId === '1' ? 'Mecánica' : companyId === '2' ? 'Flete' : companyId === '3' ? 'Oficina' : 'Audio',
       monto: 50000,
@@ -222,7 +225,7 @@ const CalendarManager = ({ companyId, addToast }) => {
           archivos: [],
           empresa_derivada_id: derivedCompany ? parseInt(derivedCompany) : null,
           trabajador_asignado: assignedWorker,
-          fecha_ingreso: `${newDate || '2026-06-05'} ${newTime || '12:00'}:00` // Pass scheduled time as start time
+          fecha_ingreso: `${newDate || realTodayStr} ${newTime || '12:00'}:00` // Pass scheduled time as start time
         });
         addToast('Orden de trabajo vinculada generada.', 'info');
       } catch (err) {
@@ -855,9 +858,9 @@ const CalendarManager = ({ companyId, addToast }) => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', flex: 1, backgroundColor: 'var(--border)', gap: '1px', overflowY: 'auto' }}>
               {totalSlots.map((day, index) => {
-                const dateStr = day ? `2026-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}` : '';
+                const dateStr = day ? `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}` : '';
                 const dayEvents = day ? filteredEvents.filter(e => e.date === dateStr).sort((a, b) => a.time.localeCompare(b.time)) : [];
-                const isToday = dateStr === '2026-06-05';
+                const isToday = dateStr === realTodayStr;
 
                 return (
                   <div
@@ -903,8 +906,8 @@ const CalendarManager = ({ companyId, addToast }) => {
 
             <div style={{ flex: 1, display: 'flex' }}>
               {weekDays.map((date, index) => {
-                const dateStr = `2026-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                const isToday = dateStr === '2026-06-05';
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                const isToday = dateStr === realTodayStr;
 
                 return (
                   <div key={index} style={{ flex: 1, borderRight: index < 6 ? '1px solid var(--border)' : 'none', display: 'flex', flexDirection: 'column' }}>
