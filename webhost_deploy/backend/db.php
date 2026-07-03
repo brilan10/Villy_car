@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 $host = 'localhost'; 
 $db   = 'villycar_base de datos'; 
 $user = 'villycar_joel'; 
-$pass = 'abc.123.vilycar'; 
+$pass = 'FSKrY2w$hi-w#TN^'; 
 
 $charset = 'utf8mb4';
 

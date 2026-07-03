@@ -119,7 +119,7 @@ switch ($method) {
         $params = [];
 
         // Campos permitidos para edición
-        $allowedFields = ['estado', 'estado_pago', 'fecha_ingreso', 'cliente_nombre', 'cliente_telefono', 'vehiculo_patente', 'vehiculo_modelo', 'problema_reportado', 'area_asignada', 'trabajador_asignado', 'bitacora', 'porcentaje_avance'];
+        $allowedFields = ['estado', 'estado_pago', 'fecha_ingreso', 'cliente_nombre', 'cliente_telefono', 'vehiculo_patente', 'vehiculo_modelo', 'problema_reportado', 'area_asignada', 'trabajador_asignado', 'bitacora', 'porcentaje_avance', 'archivos'];
         
         foreach ($allowedFields as $field) {
             if (array_key_exists($field, $inputData)) {
