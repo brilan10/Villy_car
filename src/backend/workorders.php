@@ -107,17 +107,33 @@ switch ($method) {
         $id = $inputData['id'] ?? null;
         if (!$id) responseJson(["error" => "ID requerido"], 400);
 
-        $estado = $inputData['estado'] ?? 'ingresado';
+        $fields = [];
+        $params = [];
         
-        // Si hay fecha de entrega (al completar o entregar)
-        $fecha_entrega = null;
-        if (in_array($estado, ['completado', 'entregado'])) {
-            $fecha_entrega = date('Y-m-d H:i:s');
-            $stmt = $pdo->prepare("UPDATE ordenes_trabajo SET estado = ?, fecha_entrega = ? WHERE id = ? AND empresa_id = ?");
-            $stmt->execute([$estado, $fecha_entrega, $id, $empresa_id]);
-        } else {
-            $stmt = $pdo->prepare("UPDATE ordenes_trabajo SET estado = ? WHERE id = ? AND empresa_id = ?");
-            $stmt->execute([$estado, $id, $empresa_id]);
+        if (isset($inputData['cliente_nombre'])) { $fields[] = "cliente_nombre = ?"; $params[] = $inputData['cliente_nombre']; }
+        if (isset($inputData['cliente_telefono'])) { $fields[] = "cliente_telefono = ?"; $params[] = $inputData['cliente_telefono']; }
+        if (isset($inputData['vehiculo_patente'])) { $fields[] = "vehiculo_patente = ?"; $params[] = $inputData['vehiculo_patente']; }
+        if (isset($inputData['vehiculo_modelo'])) { $fields[] = "vehiculo_modelo = ?"; $params[] = $inputData['vehiculo_modelo']; }
+        if (isset($inputData['problema_reportado'])) { $fields[] = "problema_reportado = ?"; $params[] = $inputData['problema_reportado']; }
+        if (isset($inputData['estado'])) { $fields[] = "estado = ?"; $params[] = $inputData['estado']; }
+        if (isset($inputData['area_asignada'])) { $fields[] = "area_asignada = ?"; $params[] = $inputData['area_asignada']; }
+        if (isset($inputData['archivos'])) { $fields[] = "archivos = ?"; $params[] = is_array($inputData['archivos']) ? json_encode($inputData['archivos']) : $inputData['archivos']; }
+        if (array_key_exists('trabajador_asignado', $inputData)) { $fields[] = "trabajador_asignado = ?"; $params[] = $inputData['trabajador_asignado']; }
+        if (isset($inputData['fecha_ingreso'])) { $fields[] = "fecha_ingreso = ?"; $params[] = $inputData['fecha_ingreso']; }
+        if (isset($inputData['bitacora'])) { $fields[] = "bitacora = ?"; $params[] = is_array($inputData['bitacora']) ? json_encode($inputData['bitacora']) : $inputData['bitacora']; }
+        
+        $estado = $inputData['estado'] ?? null;
+        if ($estado && in_array($estado, ['completado', 'entregado'])) {
+            $fields[] = "fecha_entrega = ?";
+            $params[] = date('Y-m-d H:i:s');
+        }
+
+        if (count($fields) > 0) {
+            $query = "UPDATE ordenes_trabajo SET " . implode(", ", $fields) . " WHERE id = ? AND empresa_id = ?";
+            $params[] = $id;
+            $params[] = $empresa_id;
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
         }
         
         responseJson(["success" => true]);
