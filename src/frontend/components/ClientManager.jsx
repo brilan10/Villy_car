@@ -166,7 +166,8 @@ const ClientManager = ({ companyId, addToast }) => {
         </div>
 
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                 <th style={{ padding: '16px' }}>Cliente</th>
@@ -214,6 +215,7 @@ const ClientManager = ({ companyId, addToast }) => {
               ))}
             </tbody>
           </table>
+</div>
         </div>
       </div>
 
@@ -234,7 +236,8 @@ const ClientManager = ({ companyId, addToast }) => {
               ) : clientHistory.length === 0 ? (
                 <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>Este cliente no tiene ventas ni órdenes de trabajo registradas.</div>
               ) : (
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                       <th style={{ padding: '12px' }}>Fecha</th>
@@ -266,6 +269,7 @@ const ClientManager = ({ companyId, addToast }) => {
                     ))}
                   </tbody>
                 </table>
+</div>
               )}
             </div>
             

@@ -276,7 +276,8 @@ const ProductManager = ({ companyId, addToast }) => {
           {loading ? (
             <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>Cargando productos...</div>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                   <th style={{ padding: '16px' }}>Código</th>
@@ -313,6 +314,7 @@ const ProductManager = ({ companyId, addToast }) => {
                 )}
               </tbody>
             </table>
+</div>
           )}
         </div>
       </div>

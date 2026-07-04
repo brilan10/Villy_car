@@ -169,3 +169,115 @@ input:focus, select:focus, textarea:focus {
     display: none !important;
   }
 }
+
+/* Responsive Design (Mobile) */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .main-content {
+    padding: 16px;
+    padding-bottom: 90px; /* Space for bottom nav */
+  }
+
+  .sidebar {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    height: 70px !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding: 0 10px !important;
+    border-right: none !important;
+    border-top: 1px solid var(--border) !important;
+    z-index: 999;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background-color: var(--bg-card) !important;
+  }
+  
+  .sidebar-header {
+    display: none !important; /* Hide logos on mobile nav */
+  }
+  
+  .sidebar-user {
+    display: none !important; /* Hide user info on bottom nav */
+  }
+
+  .sidebar-menu {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: max-content !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .sidebar-btn {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 8px !important;
+    width: auto !important;
+    min-width: 60px;
+    border-radius: 12px !important;
+  }
+  
+  .sidebar-btn span {
+    display: none !important; /* Hide text, only show icons */
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .modal-overlay {
+    align-items: flex-start !important; /* Scrollable from top */
+    padding: 10px !important;
+  }
+
+  .modal-content {
+    width: 100% !important;
+    margin: 0 auto !important;
+    max-height: 95vh !important;
+  }
+
+  .grid-mobile-1 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .flex-mobile-col {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .title-lg {
+    font-size: 1.25rem;
+  }
+  
+  .title-md {
+    font-size: 1.1rem;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background-color: var(--bg-card);
+  }
+
+  .pos-cart {
+    width: 100% !important;
+  }
+
+  .h-auto-mobile {
+    height: auto !important;
+  }
+}
+

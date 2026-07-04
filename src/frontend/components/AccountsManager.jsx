@@ -345,7 +345,8 @@ const AccountsManager = ({ companyId, addToast }) => {
             </h2>
             
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '16px 24px' }}>Entidad / Persona</th>
@@ -430,6 +431,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                   )}
                 </tbody>
               </table>
+</div>
             </div>
           </div>
           )}
@@ -443,7 +445,8 @@ const AccountsManager = ({ companyId, addToast }) => {
             </h2>
             
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                     <th style={{ padding: '16px 24px' }}>Proveedor / Empresa</th>
@@ -525,6 +528,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                   )}
                 </tbody>
               </table>
+</div>
             </div>
           </div>
           )}
@@ -827,7 +831,8 @@ const AccountsManager = ({ companyId, addToast }) => {
             <div>
               <h3 className="title-md" style={{ marginBottom: '12px', fontSize: '1.1rem', color: 'white' }}>Desglose de Documentos</h3>
               <div style={{ overflowX: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
+                <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'var(--bg-main)', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                       <th style={{ padding: '12px 16px' }}>N° Documento (ID)</th>
@@ -862,6 +867,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                     })}
                   </tbody>
                 </table>
+</div>
               </div>
             </div>
 
@@ -871,7 +877,8 @@ const AccountsManager = ({ companyId, addToast }) => {
               <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No hay abonos registrados en finanzas para este {edpData.type === 'cobrar' ? 'cliente' : 'proveedor'}.</div>
             ) : (
               <div style={{ overflowX: 'auto', border: '1px solid var(--border)', borderRadius: '8px' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', backgroundColor: 'var(--bg-main)', fontSize: '0.9rem' }}>
+                <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', backgroundColor: 'var(--bg-main)', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                       <th style={{ padding: '12px 16px' }}>Fecha</th>
@@ -891,6 +898,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                     ))}
                   </tbody>
                 </table>
+</div>
               </div>
             )}
 

@@ -158,7 +158,8 @@ const SettingsManager = ({ companyId, addToast }) => {
             </div>
           </div>
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                   <th style={{ padding: '12px' }}>RUT</th>
@@ -236,6 +237,7 @@ const SettingsManager = ({ companyId, addToast }) => {
                 )}
               </tbody>
             </table>
+</div>
           </div>
         </div>
       )}

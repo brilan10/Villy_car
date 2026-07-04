@@ -111,7 +111,7 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
   };
 
   return (
-    <div style={{
+    <div className="sidebar" style={{
       width: 'var(--sidebar-w)',
       height: '100vh',
       backgroundColor: 'var(--bg-card)',
@@ -121,7 +121,7 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
       padding: '24px 16px'
     }}>
       {/* Company Selector */}
-      <div style={{ marginBottom: '32px' }}>
+      <div className="sidebar-header" style={{ marginBottom: '32px' }}>
         {getCompanyHeader()}
         
         <select 
@@ -138,13 +138,14 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
 
       {/* Navigation */}
       <nav style={{ flex: 1, overflowY: 'auto', paddingRight: '8px' }}>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', margin: 0, padding: 0 }}>
+        <ul className="sidebar-menu" style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', margin: 0, padding: 0 }}>
           {menuItems.map(item => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (
               <li key={item.id}>
                 <button
+                  className="sidebar-btn"
                   onClick={() => setActiveTab(item.id)}
                   style={{
                     width: '100%',
@@ -172,7 +173,7 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
                   }}
                 >
                   <Icon size={20} />
-                  {item.label}
+                  <span>{item.label}</span>
                 </button>
               </li>
             );
@@ -180,8 +181,8 @@ const Sidebar = ({ currentCompany, setCurrentCompany, activeTab, setActiveTab, c
         </ul>
       </nav>
 
-      {/* Footer Settings */}
-      <div style={{ marginTop: 'auto', paddingTop: '24px', borderTop: '1px solid var(--border)' }}>
+      {/* User Area */}
+      <div className="sidebar-user" style={{ marginTop: '24px', borderTop: '1px solid var(--border)', paddingTop: '24px' }}>
         {currentUser && (
           <div style={{ padding: '0 16px 16px 16px', color: 'var(--text-muted)', fontSize: '0.75rem', textAlign: 'center' }}>
             Sesión: <strong>{currentUser.nombre}</strong><br/>

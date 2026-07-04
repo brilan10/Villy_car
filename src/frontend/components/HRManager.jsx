@@ -685,7 +685,8 @@ const HRManager = ({ companyId, addToast }) => {
             {loading ? (
               <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>Cargando datos BD...</div>
             ) : (
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                     <th style={{ padding: '16px' }}>Nombre</th>
@@ -729,6 +730,7 @@ const HRManager = ({ companyId, addToast }) => {
                   })}
                 </tbody>
               </table>
+</div>
             )}
           </div>
         </div>
@@ -964,7 +966,8 @@ const HRManager = ({ companyId, addToast }) => {
               <p style={{ color: 'var(--text-muted)' }}>No hay estados de pago registrados.</p>
             ) : (
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                       <th style={{ padding: '16px' }}>Fecha</th>
@@ -1008,6 +1011,7 @@ const HRManager = ({ companyId, addToast }) => {
                     ))}
                   </tbody>
                 </table>
+</div>
               </div>
             )}
           </div>
@@ -1031,7 +1035,8 @@ const HRManager = ({ companyId, addToast }) => {
 
           {historialWorkerId && (
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                     <th style={{ padding: '16px' }}>Periodo</th>
@@ -1071,6 +1076,7 @@ const HRManager = ({ companyId, addToast }) => {
                   ))}
                 </tbody>
               </table>
+</div>
             </div>
           )}
         </div>

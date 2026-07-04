@@ -157,7 +157,7 @@ const PointOfSale = ({ companyId, addToast }) => {
 
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', gap: '24px', height: 'calc(100vh - 64px)' }}>
+    <div className="animate-fade-in flex-mobile-col h-auto-mobile" style={{ display: 'flex', gap: '24px', height: 'calc(100vh - 64px)' }}>
       {/* Products Grid */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
@@ -211,7 +211,7 @@ const PointOfSale = ({ companyId, addToast }) => {
       </div>
 
       {/* Cart Sidebar */}
-      <div className="card" style={{ width: '380px', display: 'flex', flexDirection: 'column', padding: '24px' , margin: 'auto' }}>
+      <div className="card pos-cart" style={{ width: '380px', display: 'flex', flexDirection: 'column', padding: '24px' , margin: 'auto' }}>
         <h2 className="title-md" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '16px', marginBottom: '16px' }}>
           Detalle de Venta
         </h2>
@@ -444,7 +444,8 @@ const PointOfSale = ({ companyId, addToast }) => {
               </div>
 
               <div style={{ marginBottom: '24px' }}>
-                <table style={{ width: '100%', fontSize: '14px' }}>
+                <div className="table-responsive">
+<table style={{ width: '100%', fontSize: '14px' }}>
                   <tbody>
                     <tr><td style={{ width: '120px', fontWeight: 'bold', padding: '4px 0' }}>Empresa:</td><td>{quoteData.empresa || '_____________________'}</td></tr>
                     <tr><td style={{ fontWeight: 'bold', padding: '4px 0' }}>RUT:</td><td>{quoteData.rut || '_____________________'}</td></tr>
@@ -452,9 +453,11 @@ const PointOfSale = ({ companyId, addToast }) => {
                     <tr><td style={{ fontWeight: 'bold', padding: '4px 0', verticalAlign: 'top' }}>Descripción:</td><td>{quoteData.descripcion || '_____________________'}</td></tr>
                   </tbody>
                 </table>
+</div>
               </div>
 
-              <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '24px', fontSize: '14px' }}>
+              <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '24px', fontSize: '14px' }}>
                 <thead>
                   <tr style={{ backgroundColor: '#f0f0f0', borderBottom: '2px solid #ccc' }}>
                     <th style={{ padding: '8px', textAlign: 'left' }}>Item</th>
@@ -474,6 +477,7 @@ const PointOfSale = ({ companyId, addToast }) => {
                   ))}
                 </tbody>
               </table>
+</div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '16px', fontWeight: 'bold' }}>
                 <div style={{ width: '200px', display: 'flex', justifyContent: 'space-between', padding: '8px', backgroundColor: '#f0f0f0', border: '1px solid #ccc' }}>

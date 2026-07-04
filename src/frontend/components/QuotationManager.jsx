@@ -418,7 +418,8 @@ const QuotationManager = ({ companyId, addToast }) => {
           <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No hay cotizaciones registradas.</div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <div className="table-responsive">
+<table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                   <th style={{ padding: '12px', fontWeight: 600 }}>N°</th>
@@ -460,6 +461,7 @@ const QuotationManager = ({ companyId, addToast }) => {
                 ))}
               </tbody>
             </table>
+</div>
           </div>
         )}
       </div>
