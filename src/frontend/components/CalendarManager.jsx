@@ -343,8 +343,10 @@ const CalendarManager = ({ companyId, addToast }) => {
     }
 
     // 5. Worker filter (si no es trabajador, o si lo es, ya se filtró arriba)
-    if (filterWorker !== 'Todos' && e.worker !== filterWorker) {
-      return false;
+    if (filterWorker && filterWorker !== 'Todos' && filterWorker.trim() !== '') {
+      if (!e.worker || !e.worker.toLowerCase().includes(filterWorker.toLowerCase())) {
+        return false;
+      }
     }
 
     return true;
@@ -493,16 +495,21 @@ const CalendarManager = ({ companyId, addToast }) => {
               </div>
 
               {!isWorker && workers.length > 0 && (
-                <select 
-                  value={filterWorker} 
-                  onChange={e => setFilterWorker(e.target.value)}
-                  style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: 'white', cursor: 'pointer' }}
-                >
-                  <option value="Todos">Todos los Trabajadores</option>
-                  {workers.map(w => (
-                    <option key={w.rut} value={w.name}>{w.name}</option>
-                  ))}
-                </select>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    list="workers-list"
+                    type="text"
+                    placeholder="Escriba Trabajador..."
+                    value={filterWorker === 'Todos' ? '' : filterWorker}
+                    onChange={e => setFilterWorker(e.target.value)}
+                    style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: 'white', width: '200px' }}
+                  />
+                  <datalist id="workers-list">
+                    {workers.map(w => (
+                      <option key={w.rut} value={w.name} />
+                    ))}
+                  </datalist>
+                </div>
               )}
             </div>
           </div>
