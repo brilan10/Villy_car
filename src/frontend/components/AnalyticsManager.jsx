@@ -561,7 +561,13 @@ const AnalyticsManager = ({ companyId, addToast }) => {
           <p>Comienza agregando un nuevo gráfico usando el botón superior.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+        <>
+          {/* Mobile Chart Fallback */}
+          <div className="show-on-mobile card" style={{ padding: '24px', textAlign: 'center', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+            <p style={{ color: 'var(--text-muted)' }}>📊 Los gráficos interactivos están optimizados para pantallas grandes y no se muestran en dispositivos móviles. Usa la exportación general para ver los datos o ábrelo en un PC.</p>
+          </div>
+
+          <div className="hide-on-mobile" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
           {activeCharts.map(chart => (
             <div key={chart.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '16px', marginBottom: '16px' }}>
@@ -575,7 +581,8 @@ const AnalyticsManager = ({ companyId, addToast }) => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        </>
       )}
 
       {/* MODAL AGREGAR GRÁFICO */}

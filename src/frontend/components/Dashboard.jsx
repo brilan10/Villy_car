@@ -545,8 +545,13 @@ const Dashboard = ({ companyId, addToast }) => {
         })}
       </div>
 
+      {/* Mobile Chart Fallback */}
+      <div className="show-on-mobile card" style={{ padding: '24px', textAlign: 'center', marginBottom: '24px', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+        <p style={{ color: 'var(--text-muted)' }}>📊 Los gráficos interactivos están optimizados para pantallas grandes y no se muestran en dispositivos móviles.</p>
+      </div>
+
       {/* Charts Area Superior */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
+      <div className="hide-on-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
         <div className="card">
           <h2 className="title-md">Flujo de Caja ({timeRange})</h2>
           <div style={{ height: '300px', width: '100%', marginTop: '24px' }}>
@@ -599,7 +604,7 @@ const Dashboard = ({ companyId, addToast }) => {
       </div>
 
       {/* Charts Area Inferior (Nuevos Gráficos) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
+      <div className="hide-on-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '24px' }}>
         <div className="card">
           <h2 className="title-md">Desglose de Egresos</h2>
           <div style={{ height: '300px', width: '100%', marginTop: '16px' }}>
