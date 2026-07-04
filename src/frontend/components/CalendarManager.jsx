@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Calendar as CalendarIcon, Clock, User, Plus, ChevronLeft, ChevronRight, MapPin, X, FileText, DollarSign, Filter, Phone, MessageCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Plus, ChevronLeft, ChevronRight, MapPin, X, FileText, DollarSign, Filter, Phone, MessageCircle, Trash2 } from 'lucide-react';
 import { getWorkers, getAgendas, createAgenda, updateAgenda, deleteAgenda, getClients, createWorkOrder, getWorkOrders, updateWorkOrder, createClient } from '../services/api';
 import { UserContext } from '../App';
 
@@ -1001,7 +1001,31 @@ const CalendarManager = ({ companyId, addToast }) => {
       {selectedEvent && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
           <div className="card animate-fade-in" style={{ width: '450px', borderTop: `4px solid ${getEventColor(selectedEvent.type)}`, position: 'relative' , margin: 'auto' }}>
-            <button onClick={() => { setSelectedEvent(null); setCheckoutStep(false); setIsRescheduling(false); }} style={{ position: 'absolute', top: '16px', right: '16px', color: 'var(--text-muted)' }}><X size={20} /></button>
+            <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', gap: '12px' }}>
+              {!isWorker && !selectedEvent.isOrder && (
+                <button 
+                  onClick={async () => {
+                    if (window.confirm('¿Está seguro de que desea eliminar esta cita? Esta acción no se puede deshacer.')) {
+                      try {
+                        await deleteAgenda(companyId, selectedEvent.realId);
+                        setEvents(events.filter(e => e.id !== selectedEvent.id));
+                        setSelectedEvent(null);
+                        addToast('Cita eliminada correctamente.', 'success');
+                      } catch(err) {
+                        addToast('Error al eliminar cita.', 'danger');
+                      }
+                    }
+                  }} 
+                  style={{ color: 'var(--danger)', background: 'transparent', padding: '4px', display: 'flex', alignItems: 'center' }}
+                  title="Eliminar Cita"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
+              <button onClick={() => { setSelectedEvent(null); setCheckoutStep(false); setIsRescheduling(false); }} style={{ color: 'var(--text-muted)', background: 'transparent', padding: '4px', display: 'flex', alignItems: 'center' }}>
+                <X size={20} />
+              </button>
+            </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
