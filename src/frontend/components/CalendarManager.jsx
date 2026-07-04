@@ -1002,26 +1002,6 @@ const CalendarManager = ({ companyId, addToast }) => {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
           <div className="card animate-fade-in" style={{ width: '450px', borderTop: `4px solid ${getEventColor(selectedEvent.type)}`, position: 'relative' , margin: 'auto' }}>
             <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', gap: '12px' }}>
-              {!isWorker && !selectedEvent.isOrder && (
-                <button 
-                  onClick={async () => {
-                    if (window.confirm('¿Está seguro de que desea eliminar esta cita? Esta acción no se puede deshacer.')) {
-                      try {
-                        await deleteAgenda(companyId, selectedEvent.realId);
-                        setEvents(events.filter(e => e.id !== selectedEvent.id));
-                        setSelectedEvent(null);
-                        addToast('Cita eliminada correctamente.', 'success');
-                      } catch(err) {
-                        addToast('Error al eliminar cita.', 'danger');
-                      }
-                    }
-                  }} 
-                  style={{ color: 'var(--danger)', background: 'transparent', padding: '4px', display: 'flex', alignItems: 'center' }}
-                  title="Eliminar Cita"
-                >
-                  <Trash2 size={20} />
-                </button>
-              )}
               <button onClick={() => { setSelectedEvent(null); setCheckoutStep(false); setIsRescheduling(false); }} style={{ color: 'var(--text-muted)', background: 'transparent', padding: '4px', display: 'flex', alignItems: 'center' }}>
                 <X size={20} />
               </button>
@@ -1277,6 +1257,26 @@ const CalendarManager = ({ companyId, addToast }) => {
             <div style={{ marginTop: '24px' }}>
               {!checkoutStep ? (
                 <div style={{ display: 'flex', gap: '12px' }}>
+                  {!isWorker && !selectedEvent.isOrder && (
+                    <button 
+                      onClick={async () => {
+                        if (window.confirm('¿Está seguro de que desea eliminar esta cita? Esta acción no se puede deshacer.')) {
+                          try {
+                            await deleteAgenda(companyId, selectedEvent.realId);
+                            setEvents(events.filter(e => e.id !== selectedEvent.id));
+                            setSelectedEvent(null);
+                            addToast('Cita eliminada correctamente.', 'success');
+                          } catch(err) {
+                            addToast('Error al eliminar cita.', 'danger');
+                          }
+                        }
+                      }} 
+                      style={{ padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent', border: '1px solid var(--danger)', color: 'var(--danger)', borderRadius: '8px', cursor: 'pointer' }}
+                      title="Eliminar Cita"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  )}
                   <button className="btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setCheckoutStep(true)}>Pasar a Venta</button>
                 </div>
               ) : (
