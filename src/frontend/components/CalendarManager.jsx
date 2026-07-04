@@ -19,6 +19,7 @@ const CalendarManager = ({ companyId, addToast }) => {
   const [isWorkerFocused, setIsWorkerFocused] = useState(false);
   const [agendaSearchTerm, setAgendaSearchTerm] = useState('');
   const [isAgendaSearchFocused, setIsAgendaSearchFocused] = useState(false);
+  const [isWorkerSearchFocused, setIsWorkerSearchFocused] = useState(false);
 
   // Email reminders and Toast states
   const [sendEmailReminder, setSendEmailReminder] = useState(false);
@@ -497,18 +498,48 @@ const CalendarManager = ({ companyId, addToast }) => {
               {!isWorker && workers.length > 0 && (
                 <div style={{ position: 'relative' }}>
                   <input
-                    list="workers-list"
                     type="text"
                     placeholder="Escriba Trabajador..."
                     value={filterWorker === 'Todos' ? '' : filterWorker}
                     onChange={e => setFilterWorker(e.target.value)}
+                    onFocus={() => setIsWorkerSearchFocused(true)}
+                    onBlur={() => setTimeout(() => setIsWorkerSearchFocused(false), 200)}
                     style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-main)', color: 'white', width: '200px' }}
                   />
-                  <datalist id="workers-list">
-                    {workers.map(w => (
-                      <option key={w.rut} value={w.name} />
-                    ))}
-                  </datalist>
+                  {isWorkerSearchFocused && (
+                    <div className="animate-fade-in" style={{
+                      position: 'absolute', top: '100%', left: 0, width: '100%',
+                      backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)',
+                      borderRadius: '8px', marginTop: '4px', zIndex: 50,
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)',
+                      maxHeight: '200px', overflowY: 'auto'
+                    }}>
+                      <div 
+                        style={{ padding: '8px 12px', cursor: 'pointer', borderBottom: '1px solid var(--border)' }}
+                        onClick={() => { setFilterWorker('Todos'); setIsWorkerSearchFocused(false); }}
+                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-card)'}
+                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.875rem' }}>Todos los Trabajadores</span>
+                      </div>
+                      {workers.filter(w => !filterWorker || filterWorker === 'Todos' || w.name.toLowerCase().includes(filterWorker.toLowerCase())).map(w => (
+                        <div 
+                          key={w.rut}
+                          style={{ padding: '8px 12px', cursor: 'pointer', borderBottom: '1px solid var(--border)' }}
+                          onClick={() => { setFilterWorker(w.name); setIsWorkerSearchFocused(false); }}
+                          onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-card)'}
+                          onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                        >
+                          <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.875rem' }}>{w.name}</span>
+                        </div>
+                      ))}
+                      {workers.filter(w => !filterWorker || filterWorker === 'Todos' || w.name.toLowerCase().includes(filterWorker.toLowerCase())).length === 0 && (
+                        <div style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '0.875rem', textAlign: 'center' }}>
+                          Sin resultados
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
