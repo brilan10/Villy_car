@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, FileText, Download, X, Save } from 'lucide-react';
-import { getQuotes, createQuote, updateQuote, deleteQuote, getProducts } from '../services/api';
+import { getQuotes, createQuote, updateQuote, deleteQuote, getProducts, getClients, createClient } from '../services/api';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const QuotationManager = ({ companyId, addToast }) => {
   const [quotes, setQuotes] = useState([]);
   const [products, setProducts] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
@@ -31,9 +32,19 @@ const QuotationManager = ({ companyId, addToast }) => {
     setFilterCompany(companyId);
   }, [companyId]);
 
+  const fetchClients = async () => {
+    try {
+      const data = await getClients(companyId);
+      setClients(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching clients', error);
+    }
+  };
+
   useEffect(() => {
     fetchQuotes();
     fetchProducts();
+    fetchClients();
   }, [companyId, filterCompany]);
 
   const fetchProducts = async () => {
@@ -115,6 +126,30 @@ const QuotationManager = ({ companyId, addToast }) => {
 
   const handleSave = async () => {
     try {
+      if (currentQuote.cliente && currentQuote.rut) {
+        const clientName = currentQuote.cliente.trim();
+        const clientRut = currentQuote.rut.trim();
+        
+        const clientExists = clients.find(c => 
+          c.nombre.toLowerCase() === clientName.toLowerCase() ||
+          c.rut === clientRut
+        );
+
+        if (!clientExists) {
+          try {
+            await createClient(companyId, {
+              nombre: clientName,
+              rut: clientRut,
+              telefono: currentQuote.telefono || '',
+              email: ''
+            });
+            fetchClients();
+          } catch (e) {
+            console.error('Error auto-creating client', e);
+          }
+        }
+      }
+
       if (currentQuote.id) {
         await updateQuote(companyId, currentQuote);
         addToast('Cotización actualizada', 'success');
@@ -269,11 +304,15 @@ const QuotationManager = ({ companyId, addToast }) => {
       
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'bold');
-      doc.text(quote.cliente ? quote.cliente.toUpperCase() : 'N/A', 110, 66);
+      const clientNameText = quote.cliente ? quote.cliente.toUpperCase() : 'N/A';
+      const clientNameLines = doc.splitTextToSize(clientNameText, 85);
+      doc.text(clientNameLines, 110, 66);
+      
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
-      doc.text(`RUT: ${quote.rut || 'N/A'}`, 110, 71);
-      doc.text(`Teléfono: ${quote.telefono || 'N/A'}`, 110, 76);
+      const shiftY = Math.max(0, (clientNameLines.length - 1) * 5);
+      doc.text(`RUT: ${quote.rut || 'N/A'}`, 110, 71 + shiftY);
+      doc.text(`Teléfono: ${quote.telefono || 'N/A'}`, 110, 76 + shiftY);
 
       // Table Data
       let currentY = 95;
@@ -475,7 +514,24 @@ const QuotationManager = ({ companyId, addToast }) => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Empresa / Cliente</label>
-                <input type="text" style={{ width: '100%' }} value={currentQuote.cliente} onChange={e => setCurrentQuote({...currentQuote, cliente: e.target.value})} />
+                <input 
+                  type="text" 
+                  list="client-options"
+                  style={{ width: '100%' }} 
+                  value={currentQuote.cliente} 
+                  onChange={e => {
+                    const val = e.target.value;
+                    const found = clients.find(c => c.nombre === val);
+                    if (found) {
+                      setCurrentQuote({...currentQuote, cliente: val, rut: found.rut, telefono: found.telefono || ''});
+                    } else {
+                      setCurrentQuote({...currentQuote, cliente: val});
+                    }
+                  }} 
+                />
+                <datalist id="client-options">
+                  {clients.map(c => <option key={c.id} value={c.nombre} />)}
+                </datalist>
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>RUT</label>
