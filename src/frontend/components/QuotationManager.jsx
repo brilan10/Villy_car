@@ -232,14 +232,14 @@ const QuotationManager = ({ companyId, addToast }) => {
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(24);
       doc.setFont('helvetica', 'bold');
-      doc.text('COTIZACIÓN', 14, 15);
+      doc.text('COTIZACIÓN', 14, 18);
       
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       const dateStr = quote.fecha ? new Date(quote.fecha).toLocaleDateString() : new Date().toLocaleDateString();
-      doc.text(`Realizada el    : ${dateStr}`, 14, 25);
-      doc.text(`Fono Directo   : ${companyInfo.phone}`, 14, 32);
-      doc.text(`Email              : ${companyInfo.email}`, 14, 39);
+      doc.text(`Fecha: ${dateStr}`, 14, 27);
+      doc.text(`Teléfono: ${companyInfo.phone}`, 14, 34);
+      doc.text(`Email: ${companyInfo.email}`, 14, 41);
       
       doc.setFontSize(8);
       doc.text(`${companyInfo.address}`, 14, 47);

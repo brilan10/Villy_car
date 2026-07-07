@@ -470,12 +470,10 @@ const WorkOrderManager = ({ companyId, addToast }) => {
           <h1 className="title-lg" style={{ marginBottom: 0 }}>Órdenes de Trabajo</h1>
           <p style={{ color: 'var(--text-muted)' }}>Gestión de flujos de trabajo</p>
         </div>
-        {!isWorker && (
-          <button className="btn-primary" onClick={() => setShowAddForm(!showAddForm)}>
-            <Plus size={18} />
-            Nueva OT
-          </button>
-        )}
+        <button className="btn-primary" onClick={() => setShowAddForm(!showAddForm)}>
+          <Plus size={18} />
+          Nueva OT
+        </button>
       </div>
 
       {/* Search and Form */}
