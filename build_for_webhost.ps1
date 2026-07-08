@@ -1,7 +1,6 @@
 $ErrorActionPreference = "Stop"
-$Workspace = "c:\Users\yomiy\Documents\Proyectos\Villy Car"
-$DeployDir = "c:\Users\yomiy\Documents\Proyectos\Villy Car\webhost_deploy"
-
+$Workspace = $PSScriptRoot
+$DeployDir = "$Workspace\webhost_deploy"
 Set-Location $Workspace
 
 Write-Host "Compilando frontend..."

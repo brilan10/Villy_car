@@ -232,17 +232,17 @@ const QuotationManager = ({ companyId, addToast }) => {
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(24);
       doc.setFont('helvetica', 'bold');
-      doc.text('COTIZACIÓN', 14, 18);
+      doc.text('COTIZACIÓN', 55, 15, { align: 'center' });
       
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       const dateStr = quote.fecha ? new Date(quote.fecha).toLocaleDateString() : new Date().toLocaleDateString();
-      doc.text(`Fecha: ${dateStr}`, 14, 27);
-      doc.text(`Teléfono: ${companyInfo.phone}`, 14, 34);
-      doc.text(`Email: ${companyInfo.email}`, 14, 41);
+      doc.text(`Fecha: ${dateStr}`, 55, 23, { align: 'center' });
+      doc.text(`Teléfono: ${companyInfo.phone}`, 55, 29, { align: 'center' });
+      doc.text(`Email: ${companyInfo.email}`, 55, 35, { align: 'center' });
       
       doc.setFontSize(8);
-      doc.text(`${companyInfo.address}`, 14, 47);
+      doc.text(`${companyInfo.address}`, 55, 41, { align: 'center' });
 
       // Top Right - Company Logo / Info
       if (companyInfo.logoUrl) {
