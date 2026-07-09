@@ -11,6 +11,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('Todos');
   const [serviceFilter, setServiceFilter] = useState('Todos');
+  const [workerFilter, setWorkerFilter] = useState('Todos');
   const [dateFilter, setDateFilter] = useState('todas'); // 'hoy' o 'todas'
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
@@ -292,6 +293,11 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       return false;
     }
 
+    // 1.5. Admin worker filter
+    if (isAdmin && workerFilter !== 'Todos' && ord.trabajador_asignado !== workerFilter) {
+      return false;
+    }
+
     // 2. Date filter (today vs all)
     if (dateFilter === 'hoy' && !isToday(ord.fecha_ingreso)) {
       return false;
@@ -533,6 +539,24 @@ const WorkOrderManager = ({ companyId, addToast }) => {
             </button>
           ))}
         </div>
+
+        {isAdmin && (
+          <div style={{ display: 'flex', gap: '8px', border: '1px solid var(--border)', padding: '4px', borderRadius: '8px', backgroundColor: 'var(--bg-card)' }}>
+            <select 
+              value={workerFilter}
+              onChange={e => setWorkerFilter(e.target.value)}
+              style={{ 
+                padding: '6px 12px', fontSize: '0.875rem', borderRadius: '6px', fontWeight: 600, border: 'none', 
+                backgroundColor: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', outline: 'none'
+              }}
+            >
+              <option value="Todos">Todos los Colaboradores</option>
+              {workers.map(w => (
+                <option key={w.id} value={w.nombre}>{w.nombre}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <div style={{ position: 'relative', width: '300px' }}>
           <Search size={20} style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--text-muted)' }} />
           <input 
