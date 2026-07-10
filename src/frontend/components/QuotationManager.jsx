@@ -279,7 +279,7 @@ const QuotationManager = ({ companyId, addToast }) => {
 
       // Two Columns Section Background
       doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-      doc.rect(0, 52, 210, 35, 'F');
+      doc.rect(0, 52, 210, 40, 'F');
 
       // Left Column - Info Pago
       doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
