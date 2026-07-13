@@ -183,7 +183,7 @@ const QuotationManager = ({ companyId, addToast }) => {
 
   const getCompanyInfo = (id) => {
     switch (parseInt(id)) {
-      case 1: return { name: 'J2 PUIBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '00-118-22467-00', logoUrl: '/j2.png' };
+      case 1: return { name: 'J2 PUBLICIDAD SPA', rut: '77.551.117-6', email: 'contacto@j2publicidad.com', phone: '+56 9 4966 1782', address: 'Salas 357, Copiapó', subtitle: 'PRODUCTORA GRÁFICA', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '00-118-22467-00', logoUrl: '/j2.png' };
       case 2: return { name: 'DWORK SpA', rut: '78.083.174-K', email: 'dworkchile@gmail.com', phone: '+56 9 8491 4247', address: 'Salas 357, Copiapó', subtitle: 'SOLUCIONES INTEGRALES', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '1182224300', logoUrl: '/dwork.png' };
       case 3: return { name: 'VILLYCAR SpA', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: '', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '1182322508', logoUrl: '/VILLYCAR_TUNING.png' };
       case 4: return { name: 'TRANSPORTES', rut: '78.263.871-8', email: 'contacto@villycartuning.com', phone: '+56 9 1234 5678', address: 'Copiapó', subtitle: 'TRANSPORTE DE PASAJEROS', banco: 'Banco de Chile', tipoCuenta: 'Cuenta Corriente', cuenta: '1182322508', logoUrl: '/transportes.png' };
