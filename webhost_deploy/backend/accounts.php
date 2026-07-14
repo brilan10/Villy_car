@@ -103,13 +103,14 @@ switch ($method) {
         $tipo = $inputData['tipo'] ?? 'pagar'; // 'pagar' o 'cobrar'
         $tipo_entidad = $inputData['tipo_entidad'] ?? 'proveedor';
         $rut = $inputData['rut'] ?? '00000000-0';
+        $numero_documento = $inputData['numero_documento'] ?? null;
         $nombre_entidad = $inputData['nombre_entidad'] ?? '';
         $monto_total = $inputData['monto_total'] ?? 0;
         $fecha_vencimiento = $inputData['fecha_vencimiento'] ?? date('Y-m-d', strtotime('+30 days'));
         $estado = $inputData['estado'] ?? 'debe';
 
-        $stmt = $pdo->prepare("INSERT INTO cuentas_cxc_cxp (empresa_id, tipo, tipo_entidad, rut, nombre_entidad, monto_total, fecha_vencimiento, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$empresa_id, $tipo, $tipo_entidad, $rut, $nombre_entidad, $monto_total, $fecha_vencimiento, $estado]);
+        $stmt = $pdo->prepare("INSERT INTO cuentas_cxc_cxp (empresa_id, tipo, tipo_entidad, rut, numero_documento, nombre_entidad, monto_total, fecha_vencimiento, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$empresa_id, $tipo, $tipo_entidad, $rut, $numero_documento, $nombre_entidad, $monto_total, $fecha_vencimiento, $estado]);
         responseJson(["success" => true, "id" => $pdo->lastInsertId()], 201);
         break;
 
