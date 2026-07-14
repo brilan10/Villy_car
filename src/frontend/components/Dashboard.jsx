@@ -4,8 +4,7 @@ import { TrendingUp, TrendingDown, DollarSign, Activity, Calendar, Download, X, 
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { getFinances } from '../services/api';
 
 const Dashboard = ({ companyId, addToast }) => {
@@ -452,7 +451,7 @@ const Dashboard = ({ companyId, addToast }) => {
         return row;
       });
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: 40,
         head: head,
         body: body,
