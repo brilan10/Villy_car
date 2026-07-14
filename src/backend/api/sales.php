@@ -9,16 +9,25 @@ if (!$empresa_id) {
 
 switch ($method) {
     case 'GET':
-        $stmt = $pdo->prepare("SELECT * FROM ventas WHERE empresa_id = ? ORDER BY fecha DESC");
+        $stmt = $pdo->prepare("SELECT * FROM ventas WHERE empresa_id = ? ORDER BY fecha DESC LIMIT 500");
         $stmt->execute([$empresa_id]);
         $ventas = $stmt->fetchAll();
         
-        // Fetch items para cada venta (puede no ser performante para cientos de ventas, pero para el prototipo está bien)
-        // Idealmente sería un JOIN o fetch por demanda
+        // Optimización N+1
+        $ventaIds = array_column($ventas, 'id');
+        $itemsByVenta = [];
+        if (!empty($ventaIds)) {
+            $inQuery = implode(',', array_fill(0, count($ventaIds), '?'));
+            $stmtDet = $pdo->prepare("SELECT * FROM detalles_venta WHERE venta_id IN ($inQuery)");
+            $stmtDet->execute($ventaIds);
+            $allItems = $stmtDet->fetchAll();
+            foreach ($allItems as $item) {
+                $itemsByVenta[$item['venta_id']][] = $item;
+            }
+        }
+
         foreach($ventas as &$venta) {
-            $stmtDet = $pdo->prepare("SELECT * FROM detalles_venta WHERE venta_id = ?");
-            $stmtDet->execute([$venta['id']]);
-            $venta['items'] = $stmtDet->fetchAll();
+            $venta['items'] = $itemsByVenta[$venta['id']] ?? [];
         }
 
         responseJson($ventas);

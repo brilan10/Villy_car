@@ -109,6 +109,8 @@ switch ($method) {
         $fecha_vencimiento = $inputData['fecha_vencimiento'] ?? date('Y-m-d', strtotime('+30 days'));
         $estado = $inputData['estado'] ?? 'debe';
 
+        try { $pdo->exec("ALTER TABLE cuentas_cxc_cxp ADD COLUMN numero_documento varchar(50) DEFAULT NULL"); } catch (PDOException $e) {}
+
         $stmt = $pdo->prepare("INSERT INTO cuentas_cxc_cxp (empresa_id, tipo, tipo_entidad, rut, numero_documento, nombre_entidad, monto_total, fecha_vencimiento, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$empresa_id, $tipo, $tipo_entidad, $rut, $numero_documento, $nombre_entidad, $monto_total, $fecha_vencimiento, $estado]);
         responseJson(["success" => true, "id" => $pdo->lastInsertId()], 201);

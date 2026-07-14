@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Search, Calendar, FileText, User, DollarSign, CheckCircle2, ChevronRight, X, AlertTriangle, Download, Trash2 } from 'lucide-react';
 import { getAccounts, createAccount, updateAccount, addPayment, createFinanceTx, getWorkers, getFinances, deleteAccount } from '../services/api';
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import 'jspdf-autotable';
 
 const AccountsManager = ({ companyId, addToast }) => {
   const [accounts, setAccounts] = useState([]);
@@ -587,8 +587,8 @@ const AccountsManager = ({ companyId, addToast }) => {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)',
                       maxHeight: '150px', overflowY: 'auto'
                     }}>
-                      {(newEntityType === 'trabajador' ? workers.map(w => ({rut: w.rut, name: w.name, sub: w.cargo})) : Array.from(new Map(accounts.filter(a => a.tipo_entidad === newEntityType).map(a => [a.rut, {rut: a.rut, name: a.nombre_entidad, sub: a.tipo_entidad}])).values()))
-                        .filter(e => e.rut.includes(newRut) || e.name.toLowerCase().includes(newRut.toLowerCase()))
+                      {(newEntityType === 'trabajador' ? workers.map(w => ({rut: w.rut, name: w.nombre, sub: w.cargo})) : Array.from(new Map(accounts.filter(a => a.tipo_entidad === newEntityType).map(a => [a.rut, {rut: a.rut, name: a.nombre_entidad, sub: a.tipo_entidad}])).values()))
+                        .filter(e => (e.rut && e.rut.includes(newRut)) || (e.name && e.name.toLowerCase().includes(newRut.toLowerCase())))
                         .map((e, idx, arr) => (
                           <div
                             key={e.rut}
@@ -628,8 +628,8 @@ const AccountsManager = ({ companyId, addToast }) => {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)',
                       maxHeight: '150px', overflowY: 'auto'
                     }}>
-                      {(newEntityType === 'trabajador' ? workers.map(w => ({rut: w.rut, name: w.name, sub: w.cargo})) : Array.from(new Map(accounts.filter(a => a.tipo_entidad === newEntityType).map(a => [a.rut, {rut: a.rut, name: a.nombre_entidad, sub: a.tipo_entidad}])).values()))
-                        .filter(e => e.rut.includes(newName) || e.name.toLowerCase().includes(newName.toLowerCase()))
+                      {(newEntityType === 'trabajador' ? workers.map(w => ({rut: w.rut, name: w.nombre, sub: w.cargo})) : Array.from(new Map(accounts.filter(a => a.tipo_entidad === newEntityType).map(a => [a.rut, {rut: a.rut, name: a.nombre_entidad, sub: a.tipo_entidad}])).values()))
+                        .filter(e => (e.rut && e.rut.includes(newName)) || (e.name && e.name.toLowerCase().includes(newName.toLowerCase())))
                         .map((e, idx, arr) => (
                           <div
                             key={e.rut}
@@ -790,7 +790,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                       d.estado === 'pagada' ? 'PAGADO' : 'PENDIENTE'
                     ]);
                     
-                    autoTable(doc, {
+                    doc.autoTable({
                       startY: 55,
                       head: [['N° Doc', 'Vence', 'Total', 'Abonado', 'Saldo', 'Estado']],
                       body: tableData,

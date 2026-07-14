@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "api": "C:\\xampp\\php\\php.exe -S 127.0.0.1:8000 -t src/backend/api",
+    "api": "D:\\Xampp\\php\\php.exe -S 127.0.0.1:8000 -t src/backend/api",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

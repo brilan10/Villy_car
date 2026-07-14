@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, FileText, Download, X, Save } from 'lucide-react';
 import { getQuotes, createQuote, updateQuote, deleteQuote, getProducts, getClients, createClient } from '../services/api';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import 'jspdf-autotable';
 
 const QuotationManager = ({ companyId, addToast }) => {
   const [quotes, setQuotes] = useState([]);
@@ -336,16 +336,10 @@ const QuotationManager = ({ companyId, addToast }) => {
         `$${(parseFloat(item.cantidad || 0) * parseFloat(item.precio || 0)).toLocaleString('es-CL')}`
       ]);
 
-      autoTable(doc, {
+      doc.autoTable({
         startY: currentY,
-        head: [['Nº', 'DESCRIPCIÓN', 'CANT.', 'VALOR U.', 'TOTAL']],
-        body: items.map((item, index) => [
-          index + 1,
-          item.descripcion,
-          item.cantidad,
-          `$${parseFloat(item.precio || 0).toLocaleString('es-CL')}`,
-          `$${(parseFloat(item.cantidad || 0) * parseFloat(item.precio || 0)).toLocaleString('es-CL')}`
-        ]),
+        head: [['Nº', 'DESCRIPCIÓN', 'CANT.', 'UNID.', 'VALOR U.', 'TOTAL']],
+        body: tableData,
         theme: 'grid',
         headStyles: { fillColor: themeColor, textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
         styles: { fontSize: 9, cellPadding: 3, valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.1 },

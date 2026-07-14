@@ -41,41 +41,29 @@ if ($action === 'details') {
 
 switch ($method) {
     case 'GET':
-        // AUTO-STATE UPDATES logic
-        // We evaluate times dynamically
-        $now = time();
-        $stmtAll = $pdo->prepare("SELECT id, estado, fecha_ingreso FROM ordenes_trabajo WHERE empresa_id = ? AND estado IN ('ingresado', 'en_revision')");
-        $stmtAll->execute([$empresa_id]);
-        $activeOrders = $stmtAll->fetchAll();
+        // AUTO-STATE UPDATES logic (Optimizado)
+        $pdo->query("UPDATE ordenes_trabajo SET estado = 'en_revision' WHERE estado = 'ingresado' AND UNIX_TIMESTAMP() >= UNIX_TIMESTAMP(fecha_ingreso)");
+        $pdo->query("UPDATE ordenes_trabajo SET estado = 'en_reparacion' WHERE estado = 'en_revision' AND UNIX_TIMESTAMP() >= (UNIX_TIMESTAMP(fecha_ingreso) + 900)");
 
-        foreach ($activeOrders as $ao) {
-            $ingresoTime = strtotime($ao['fecha_ingreso']);
-            $newStatus = $ao['estado'];
-            
-            // If now is >= scheduled time and status is 'ingresado', move to 'en_revision'
-            if ($ao['estado'] === 'ingresado' && $now >= $ingresoTime) {
-                $newStatus = 'en_revision';
-            }
-            // If now is >= scheduled time + 15 mins and status is 'en_revision', move to 'en_reparacion'
-            if (($ao['estado'] === 'en_revision' || $newStatus === 'en_revision') && $now >= ($ingresoTime + 900)) { // 900s = 15m
-                $newStatus = 'en_reparacion';
-            }
-
-            if ($newStatus !== $ao['estado']) {
-                $upd = $pdo->prepare("UPDATE ordenes_trabajo SET estado = ? WHERE id = ?");
-                $upd->execute([$newStatus, $ao['id']]);
-            }
-        }
-
-        $stmt = $pdo->prepare("SELECT * FROM ordenes_trabajo WHERE empresa_id = ? ORDER BY fecha_ingreso DESC");
+        $stmt = $pdo->prepare("SELECT * FROM ordenes_trabajo WHERE empresa_id = ? ORDER BY fecha_ingreso DESC LIMIT 500");
         $stmt->execute([$empresa_id]);
         $orders = $stmt->fetchAll();
         
-        // Adjuntar detalles para mayor facilidad en frontend
+        // Adjuntar detalles (Fixing N+1 query)
+        $orderIds = array_column($orders, 'id');
+        $detallesByOrder = [];
+        if (!empty($orderIds)) {
+            $inQuery = implode(',', array_fill(0, count($orderIds), '?'));
+            $stmtDet = $pdo->prepare("SELECT * FROM detalles_orden_trabajo WHERE orden_id IN ($inQuery)");
+            $stmtDet->execute($orderIds);
+            $allDetalles = $stmtDet->fetchAll();
+            foreach ($allDetalles as $det) {
+                $detallesByOrder[$det['orden_id']][] = $det;
+            }
+        }
+
         foreach ($orders as &$order) {
-            $stmtDet = $pdo->prepare("SELECT * FROM detalles_orden_trabajo WHERE orden_id = ?");
-            $stmtDet->execute([$order['id']]);
-            $order['detalles'] = $stmtDet->fetchAll();
+            $order['detalles'] = $detallesByOrder[$order['id']] ?? [];
         }
 
         responseJson($orders);

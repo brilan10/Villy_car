@@ -17,7 +17,7 @@ switch ($method) {
         }
 
         // Alias de columnas para que coincidan con lo que espera el frontend (ProductManager.jsx)
-        $stmt = $pdo->prepare("SELECT id, empresa_id, sku AS codigo, nombre, 'General' AS categoria, precio_venta AS precio, precio_compra, precio_venta, tipo, stock_actual AS stock, imagen_url FROM productos WHERE empresa_id = ? AND activo = 1 ORDER BY created_at DESC");
+        $stmt = $pdo->prepare("SELECT id, empresa_id, sku AS codigo, nombre, 'General' AS categoria, precio_venta AS precio, precio_compra, precio_venta, tipo, stock_actual AS stock, imagen_url FROM productos WHERE empresa_id = ? AND activo = 1 ORDER BY created_at DESC LIMIT 500");
         $stmt->execute([$empresa_id]);
         $productos = $stmt->fetchAll();
         responseJson($productos);

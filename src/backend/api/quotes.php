@@ -36,10 +36,10 @@ if ($method === 'GET') {
     
     try {
         if ($empresa_id_param === 'all') {
-            $stmt = $pdo->prepare("SELECT * FROM cotizaciones ORDER BY fecha DESC");
+            $stmt = $pdo->prepare("SELECT * FROM cotizaciones ORDER BY fecha DESC LIMIT 500");
             $stmt->execute();
         } else {
-            $stmt = $pdo->prepare("SELECT * FROM cotizaciones WHERE empresa_id = ? ORDER BY fecha DESC");
+            $stmt = $pdo->prepare("SELECT * FROM cotizaciones WHERE empresa_id = ? ORDER BY fecha DESC LIMIT 500");
             $stmt->execute([$empresa_id_param]);
         }
         $quotes = $stmt->fetchAll(PDO::FETCH_ASSOC);
