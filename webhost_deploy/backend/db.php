@@ -12,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
 }
 
-// Credenciales Locales (El script de deploy las reemplaza para produccion)
-$host = '127.0.0.1'; 
-$db   = 'villy_car_db'; 
-$user = 'root'; 
-$pass = ''; 
+// Credenciales de Produccion
+$host = 'localhost'; 
+$db   = 'villycar_base de datos'; 
+$user = 'villycar_joel'; 
+$pass = 'abc.123.vilycar'; 
 
 $charset = 'utf8mb4';
 
