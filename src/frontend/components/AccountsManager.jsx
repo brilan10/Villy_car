@@ -14,6 +14,7 @@ const AccountsManager = ({ companyId, addToast }) => {
   const [workers, setWorkers] = useState([]);
   const [finances, setFinances] = useState([]);
   const [isRutFocused, setIsRutFocused] = useState(false);
+  const [isNameFocused, setIsNameFocused] = useState(false);
   const [viewFilter, setViewFilter] = useState('ambas'); // 'ambas', 'cobrar', 'pagar'
   const [editingAccount, setEditingAccount] = useState(null);
   
@@ -565,7 +566,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                 </div>
               )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', zIndex: 10 }}>
                 <div style={{ position: 'relative' }}>
                   <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>RUT / Identificador</label>
                   <input 
@@ -607,9 +608,46 @@ const AccountsManager = ({ companyId, addToast }) => {
                     </div>
                   )}
                 </div>
-                <div>
+                <div style={{ position: 'relative' }}>
                   <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Nombre / Razón Social</label>
-                  <input type="text" placeholder="Ej: Juan Pérez" value={newName} onChange={e => setNewName(e.target.value)} required style={{ width: '100%' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Ej: Juan Pérez" 
+                    value={newName} 
+                    onChange={e => setNewName(e.target.value)} 
+                    onFocus={() => setIsNameFocused(true)}
+                    onBlur={() => setTimeout(() => setIsNameFocused(false), 200)}
+                    required 
+                    style={{ width: '100%' }} 
+                  />
+                  {isNameFocused && (
+                    <div className="animate-fade-in" style={{
+                      position: 'absolute', top: '100%', left: 0, right: 0,
+                      backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)',
+                      borderRadius: '8px', marginTop: '4px', zIndex: 50,
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)',
+                      maxHeight: '150px', overflowY: 'auto'
+                    }}>
+                      {(newEntityType === 'trabajador' ? workers.map(w => ({rut: w.rut, name: w.name, sub: w.cargo})) : Array.from(new Map(accounts.filter(a => a.tipo_entidad === newEntityType).map(a => [a.rut, {rut: a.rut, name: a.nombre_entidad, sub: a.tipo_entidad}])).values()))
+                        .filter(e => e.rut.includes(newName) || e.name.toLowerCase().includes(newName.toLowerCase()))
+                        .map((e, idx, arr) => (
+                          <div
+                            key={e.rut}
+                            style={{ padding: '8px 12px', cursor: 'pointer', borderBottom: idx === arr.length - 1 ? 'none' : '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}
+                            onClick={() => {
+                              setNewRut(e.rut);
+                              setNewName(e.name);
+                              setIsNameFocused(false);
+                            }}
+                            onMouseEnter={ev => ev.currentTarget.style.backgroundColor = 'var(--bg-card)'}
+                            onMouseLeave={ev => ev.currentTarget.style.backgroundColor = 'transparent'}
+                          >
+                            <span style={{ fontWeight: 600, color: 'white', fontSize: '0.875rem' }}>{e.rut}</span>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'capitalize' }}>{e.name} {e.sub ? `- ${e.sub}` : ''}</span>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
