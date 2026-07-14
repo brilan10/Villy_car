@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, FileText, Download, X, Save } from 'lucide-react';
 import { getQuotes, createQuote, updateQuote, deleteQuote, getProducts, getClients, createClient } from '../services/api';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const QuotationManager = ({ companyId, addToast }) => {
   const [quotes, setQuotes] = useState([]);
@@ -336,7 +336,7 @@ const QuotationManager = ({ companyId, addToast }) => {
         `$${(parseFloat(item.cantidad || 0) * parseFloat(item.precio || 0)).toLocaleString('es-CL')}`
       ]);
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: currentY,
         head: [['Nº', 'DESCRIPCIÓN', 'CANT.', 'UNID.', 'VALOR U.', 'TOTAL']],
         body: tableData,

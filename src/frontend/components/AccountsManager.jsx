@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Search, Calendar, FileText, User, DollarSign, CheckCircle2, ChevronRight, X, AlertTriangle, Download, Trash2 } from 'lucide-react';
 import { getAccounts, createAccount, updateAccount, addPayment, createFinanceTx, getWorkers, getFinances, deleteAccount } from '../services/api';
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const AccountsManager = ({ companyId, addToast }) => {
   const [accounts, setAccounts] = useState([]);
@@ -790,7 +790,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                       d.estado === 'pagada' ? 'PAGADO' : 'PENDIENTE'
                     ]);
                     
-                    doc.autoTable({
+                    autoTable(doc, {
                       startY: 55,
                       head: [['N° Doc', 'Vence', 'Total', 'Abonado', 'Saldo', 'Estado']],
                       body: tableData,
