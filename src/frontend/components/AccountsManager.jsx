@@ -111,6 +111,7 @@ const AccountsManager = ({ companyId, addToast }) => {
         tipo: newType,
         tipo_entidad: newEntityType,
         rut: newRut,
+        numero_documento: docNumber,
         nombre_entidad: newName,
         monto_total: parseFloat(newAmount),
         fecha_vencimiento: newDueDate,
@@ -289,15 +290,13 @@ const AccountsManager = ({ companyId, addToast }) => {
           >
             <option value="">-- Seleccionar Persona --</option>
             {/* Clientes (Cuentas por Cobrar) */}
-            {Array.from(new Set(accounts.filter(a => a.tipo === 'cobrar').map(a => `${a.rut}|${a.nombre_entidad}`))).map(str => {
-              const [rut, name] = str.split('|');
-              return <option key={`edp-c-${rut}`} value={`${rut}|cobrar`}>{name} ({rut})</option>;
-            })}
+            {Array.from(new Map(accounts.filter(a => a.tipo === 'cobrar').map(a => [a.rut, a])).values()).map(a => (
+              <option key={`edp-c-${a.rut}`} value={`${a.rut}|cobrar`}>{a.nombre_entidad} ({a.rut})</option>
+            ))}
             {/* Proveedores (Cuentas por Pagar) */}
-            {Array.from(new Set(accounts.filter(a => a.tipo === 'pagar').map(a => `${a.rut}|${a.nombre_entidad}`))).map(str => {
-              const [rut, name] = str.split('|');
-              return <option key={`edp-p-${rut}`} value={`${rut}|pagar`}>[Prov] {name} ({rut})</option>;
-            })}
+            {Array.from(new Map(accounts.filter(a => a.tipo === 'pagar').map(a => [a.rut, a])).values()).map(a => (
+              <option key={`edp-p-${a.rut}`} value={`${a.rut}|pagar`}>[Prov] {a.nombre_entidad} ({a.rut})</option>
+            ))}
           </select>
         </div>
 
@@ -579,7 +578,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                     required 
                     style={{ width: '100%' }} 
                   />
-                  {isRutFocused && newEntityType === 'trabajador' && (
+                  {isRutFocused && (
                     <div className="animate-fade-in" style={{
                       position: 'absolute', top: '100%', left: 0, right: 0,
                       backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)',
@@ -587,22 +586,22 @@ const AccountsManager = ({ companyId, addToast }) => {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)',
                       maxHeight: '150px', overflowY: 'auto'
                     }}>
-                      {workers
-                        .filter(w => w.rut.includes(newRut) || w.name.toLowerCase().includes(newRut.toLowerCase()))
-                        .map((w, idx, arr) => (
+                      {(newEntityType === 'trabajador' ? workers.map(w => ({rut: w.rut, name: w.name, sub: w.cargo})) : Array.from(new Map(accounts.filter(a => a.tipo_entidad === newEntityType).map(a => [a.rut, {rut: a.rut, name: a.nombre_entidad, sub: a.tipo_entidad}])).values()))
+                        .filter(e => e.rut.includes(newRut) || e.name.toLowerCase().includes(newRut.toLowerCase()))
+                        .map((e, idx, arr) => (
                           <div
-                            key={w.rut}
+                            key={e.rut}
                             style={{ padding: '8px 12px', cursor: 'pointer', borderBottom: idx === arr.length - 1 ? 'none' : '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}
                             onClick={() => {
-                              setNewRut(w.rut);
-                              setNewName(w.name);
+                              setNewRut(e.rut);
+                              setNewName(e.name);
                               setIsRutFocused(false);
                             }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-card)'}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                            onMouseEnter={ev => ev.currentTarget.style.backgroundColor = 'var(--bg-card)'}
+                            onMouseLeave={ev => ev.currentTarget.style.backgroundColor = 'transparent'}
                           >
-                            <span style={{ fontWeight: 600, color: 'white', fontSize: '0.875rem' }}>{w.rut}</span>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{w.name} - {w.cargo}</span>
+                            <span style={{ fontWeight: 600, color: 'white', fontSize: '0.875rem' }}>{e.rut}</span>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'capitalize' }}>{e.name} {e.sub ? `- ${e.sub}` : ''}</span>
                           </div>
                         ))}
                     </div>
@@ -745,7 +744,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                     doc.text(`Saldo Restante: $${edpData.totalSaldo.toLocaleString()}`, 130, 44);
                     
                     const tableData = edpData.documents.map(d => [
-                      d.id,
+                      d.numero_documento || d.id,
                       d.fecha_vencimiento,
                       `$${parseFloat(d.monto_total).toLocaleString()}`,
                       `$${parseFloat(d.monto_pagado || 0).toLocaleString()}`,
@@ -850,7 +849,7 @@ const AccountsManager = ({ companyId, addToast }) => {
                       const dSaldo = dTotal - dAbono;
                       return (
                         <tr key={doc.id} style={{ borderBottom: '1px solid var(--border)', opacity: doc.estado === 'pagada' ? 0.6 : 1 }}>
-                          <td style={{ padding: '12px 16px', fontWeight: 600, color: 'white' }}>{doc.id}</td>
+                          <td style={{ padding: '12px 16px', fontWeight: 600, color: 'white' }}>{doc.numero_documento || doc.id}</td>
                           <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{doc.fecha_vencimiento}</td>
                           <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 500 }}>${dTotal.toLocaleString()}</td>
                           <td style={{ padding: '12px 16px', textAlign: 'right', color: 'var(--success)' }}>${dAbono.toLocaleString()}</td>
