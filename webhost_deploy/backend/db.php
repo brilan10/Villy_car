@@ -6,17 +6,17 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Si es un preflight request de CORS, terminar aqu??
+// Si es un preflight request de CORS, terminar aquí
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
 // Credenciales Locales (El script de deploy las reemplaza para produccion)
-$host = 'localhost'; 
-$db   = 'villycar_base de datos'; 
-$user = 'villycar_joel'; 
-$pass = 'abc.123.vilycar'; 
+$host = '127.0.0.1'; 
+$db   = 'villy_car_db'; 
+$user = 'root'; 
+$pass = ''; 
 
 $charset = 'utf8mb4';
 
@@ -35,7 +35,7 @@ try {
      exit;
 }
 
-// Funci??n auxiliar para responder en formato JSON
+// Función auxiliar para responder en formato JSON
 function responseJson($data, $statusCode = 200) {
     header('Content-Type: application/json; charset=utf-8');
     http_response_code($statusCode);
@@ -45,11 +45,10 @@ function responseJson($data, $statusCode = 200) {
 
 // Recibir el ID de empresa. Obligatorio para TODAS las peticiones de datos.
 $empresa_id = isset($_GET['empresa_id']) ? intval($_GET['empresa_id']) : null;
-// Si se env??a v??a POST/PUT body (JSON)
+// Si se envía vía POST/PUT body (JSON)
 $inputJSON = file_get_contents('php://input');
 $inputData = json_decode($inputJSON, TRUE);
 
 if(!$empresa_id && isset($inputData['empresa_id'])) {
     $empresa_id = intval($inputData['empresa_id']);
 }
-

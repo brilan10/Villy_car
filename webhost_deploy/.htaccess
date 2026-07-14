@@ -1,9 +1,13 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
+
+  # Evitar que las llamadas a la API sean redirigidas a React
+  RewriteCond %{REQUEST_URI} !^/backend/
+
+  # Si el archivo o directorio existe, sirvelo
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} !^/backend/
-  RewriteRule . /index.html [L]
+
+  # Todo lo demás envíalo a index.html para que React Router haga su magia
+  RewriteRule ^ index.html [QSA,L]
 </IfModule>
