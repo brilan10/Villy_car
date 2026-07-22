@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 // Credenciales de Produccion WebHost
 $host = 'localhost'; 
-$db   = 'brilan10_villycar'; 
-$user = 'brilan10_admin'; 
-$pass = 'TuContraseñaSegura123!'; // Recuerda actualizar la contraseña real en el hosting
+$db   = 'villycar_base de datos'; // Si en hostinger usaste guiones bajos, cámbialo a villycar_base_de_datos
+$user = 'villycar_joel'; 
+$pass = 'abc.123.vilycar';
 
 $charset = 'utf8mb4';
 
