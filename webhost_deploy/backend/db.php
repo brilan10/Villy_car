@@ -12,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
 }
 
-// Credenciales de Produccion WebHost
+// Credenciales Locales (El script de deploy las reemplaza para produccion)
 $host = 'localhost'; 
-$db   = 'villycar_base de datos'; // Si en hostinger usaste guiones bajos, cámbialo a villycar_base_de_datos
+$db   = 'villycar_base de datos'; 
 $user = 'villycar_joel'; 
-$pass = 'abc.123.vilycar';
+$pass = 'abc.123.vilycar'; 
 
 $charset = 'utf8mb4';
 
