@@ -41,10 +41,6 @@ if ($action === 'details') {
 
 switch ($method) {
     case 'GET':
-        // AUTO-STATE UPDATES logic (Optimizado)
-        $pdo->query("UPDATE ordenes_trabajo SET estado = 'en_revision' WHERE estado = 'ingresado' AND UNIX_TIMESTAMP() >= UNIX_TIMESTAMP(fecha_ingreso)");
-        $pdo->query("UPDATE ordenes_trabajo SET estado = 'en_reparacion' WHERE estado = 'en_revision' AND UNIX_TIMESTAMP() >= (UNIX_TIMESTAMP(fecha_ingreso) + 900)");
-
         $stmt = $pdo->prepare("SELECT * FROM ordenes_trabajo WHERE empresa_id = ? ORDER BY fecha_ingreso DESC LIMIT 500");
         $stmt->execute([$empresa_id]);
         $orders = $stmt->fetchAll();

@@ -5,7 +5,7 @@ import { Key, Shield, User, Users, Check, X as XIcon, Search } from 'lucide-reac
 
 const SettingsManager = ({ companyId, addToast }) => {
   const { currentUser } = useContext(UserContext);
-  const isAdmin = currentUser && currentUser.rol === 'admin';
+  const isAdmin = currentUser && (currentUser.rol === 'admin' || currentUser.rol === 'administrador');
 
   // State for Change Password (All Users)
   const [currentPassword, setCurrentPassword] = useState('');

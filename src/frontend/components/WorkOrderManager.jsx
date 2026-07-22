@@ -6,7 +6,7 @@ import { UserContext } from '../App';
 const WorkOrderManager = ({ companyId, addToast }) => {
   const { currentUser } = useContext(UserContext);
   const isWorker = currentUser?.rol === 'trabajador';
-  const isAdmin = currentUser?.rol === 'admin';
+  const isAdmin = currentUser?.rol === 'admin' || currentUser?.rol === 'administrador';
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('Todos');
