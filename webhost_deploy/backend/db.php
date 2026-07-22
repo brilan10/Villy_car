@@ -12,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
 }
 
-// Credenciales Locales (El script de deploy las reemplaza para produccion)
+// Credenciales de Produccion WebHost
 $host = 'localhost'; 
-$db   = 'villycar_base de datos'; 
-$user = 'villycar_joel'; 
-$pass = 'abc.123.vilycar'; 
+$db   = 'brilan10_villycar'; 
+$user = 'brilan10_admin'; 
+$pass = 'TuContraseñaSegura123!'; // Recuerda actualizar la contraseña real en el hosting
 
 $charset = 'utf8mb4';
 
