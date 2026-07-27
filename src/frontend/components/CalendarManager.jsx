@@ -1032,7 +1032,7 @@ const CalendarManager = ({ companyId, addToast }) => {
                       // Map UI status back to DB status for work orders
                       let dbStatus = 'ingresado';
                       if (newStatusUI === 'En Revisión') dbStatus = 'en_revision';
-                      if (newStatusUI === 'En Producción') dbStatus = 'en_reparacion';
+                      if (newStatusUI === 'En Producción') dbStatus = 'en_preparacion';
                       if (newStatusUI === 'Finalizado') dbStatus = 'completado';
                       
                       try {

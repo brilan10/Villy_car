@@ -51,9 +51,9 @@ switch ($method) {
             if ($ao['estado'] === 'ingresado' && $now >= $ingresoTime) {
                 $newStatus = 'en_revision';
             }
-            // If now is >= scheduled time + 15 mins and status is 'en_revision', move to 'en_reparacion'
+            // If now is >= scheduled time + 15 mins and status is 'en_revision', move to 'en_preparacion'
             if (($ao['estado'] === 'en_revision' || $newStatus === 'en_revision') && $now >= ($ingresoTime + 900)) { // 900s = 15m
-                $newStatus = 'en_reparacion';
+                $newStatus = 'en_preparacion';
             }
 
             if ($newStatus !== $ao['estado']) {

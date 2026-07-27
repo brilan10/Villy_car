@@ -70,11 +70,13 @@ const WorkOrderManager = ({ companyId, addToast }) => {
   }, [companyId]);
 
   const moveOrder = async (id, direction) => {
-    const statusFlow = ['ingresado', 'en_revision', 'en_reparacion', 'completado', 'entregado'];
+    const statusFlow = ['ingresado', 'en_revision', 'en_preparacion', 'completado', 'entregado'];
     const ord = orders.find(o => o.id === id);
     if (!ord) return;
     
-    let currentIndex = statusFlow.indexOf(ord.estado);
+    // Convert legacy status if needed
+    const currentStatus = ord.estado === 'en_reparacion' ? 'en_preparacion' : ord.estado;
+    let currentIndex = statusFlow.indexOf(currentStatus);
     if (currentIndex === -1) currentIndex = 0; // Fallback
     
     let nextIndex = currentIndex + direction;
@@ -86,9 +88,9 @@ const WorkOrderManager = ({ companyId, addToast }) => {
     }
     
     // Skip 'en_revision' to ensure visual column change (since ingresado and en_revision are in the same column)
-    if (direction === 1 && (ord.estado === 'ingresado' || ord.estado === 'en_revision')) {
-      nextIndex = statusFlow.indexOf('en_reparacion');
-    } else if (direction === -1 && ord.estado === 'en_reparacion') {
+    if (direction === 1 && (currentStatus === 'ingresado' || currentStatus === 'en_revision')) {
+      nextIndex = statusFlow.indexOf('en_preparacion');
+    } else if (direction === -1 && currentStatus === 'en_preparacion') {
       nextIndex = statusFlow.indexOf('ingresado');
     }
     
@@ -97,7 +99,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       const progressMap = {
         'ingresado': 0,
         'en_revision': 25,
-        'en_reparacion': 50,
+        'en_preparacion': 50,
         'completado': 75,
         'entregado': 100
       };
@@ -780,7 +782,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
       ) : (
         <div style={{ display: 'flex', gap: '24px', overflowX: 'auto', flex: 1 }}>
           {renderColumn(['ingresado', 'en_revision'], 'Recepción', '#4caf50')}
-          {renderColumn(['en_reparacion'], 'En Proceso', '#2196f3')}
+          {renderColumn(['en_preparacion', 'en_reparacion'], 'En Proceso', '#2196f3')}
           {renderColumn(['completado'], 'Finalizado', '#9c27b0')}
           {renderColumn(['entregado'], 'Entregado', '#607d8b')}
         </div>
