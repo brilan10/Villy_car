@@ -382,7 +382,7 @@ const WorkOrderManager = ({ companyId, addToast }) => {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent)' }}>
-                    <Clock size={12} /> {ord.estado.replace('_', ' ').toUpperCase()}
+                    <Clock size={12} /> {ord.estado === 'en_reparacion' ? 'EN PREPARACION' : ord.estado.replace('_', ' ').toUpperCase()}
                   </div>
                 )}
               </div>
