@@ -26,6 +26,7 @@ const AccountsManager = ({ companyId, addToast }) => {
   const [newAmount, setNewAmount] = useState('');
   const [newDueDate, setNewDueDate] = useState('');
   const [newDocNumber, setNewDocNumber] = useState('');
+  const [newDescription, setNewDescription] = useState('');
 
   // Abono input
   const [abonoValue, setAbonoValue] = useState('');
@@ -116,6 +117,7 @@ const AccountsManager = ({ companyId, addToast }) => {
         nombre_entidad: newName,
         monto_total: parseFloat(newAmount),
         fecha_vencimiento: newDueDate,
+        descripcion: newDescription,
         estado: 'debe'
       });
 
@@ -131,6 +133,7 @@ const AccountsManager = ({ companyId, addToast }) => {
       setNewAmount('');
       setNewDueDate('');
       setNewDocNumber('');
+      setNewDescription('');
       loadData();
     } catch (error) {
       addToast('Error al guardar cuenta: ' + error.message, 'danger');
@@ -374,6 +377,11 @@ const AccountsManager = ({ companyId, addToast }) => {
                               <span style={{ textTransform: 'uppercase', backgroundColor: 'var(--bg-card)', padding: '2px 6px', borderRadius: '4px', marginRight: '6px' }}>{acc.tipo_entidad}</span>
                               RUT: {acc.rut}
                             </div>
+                            {acc.descripcion && (
+                              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                {acc.descripcion}
+                              </div>
+                            )}
                           </td>
                           <td style={{ padding: '16px' }}>
                             {acc.estado === 'pagada' ? (
@@ -471,6 +479,11 @@ const AccountsManager = ({ companyId, addToast }) => {
                           <td style={{ padding: '16px 24px' }}>
                             <div style={{ fontWeight: 600, color: 'white' }}>{acc.nombre_entidad}</div>
                             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>RUT: {acc.rut}</div>
+                            {acc.descripcion && (
+                              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                                {acc.descripcion}
+                              </div>
+                            )}
                           </td>
                           <td style={{ padding: '16px' }}>
                             {acc.estado === 'pagada' ? (
@@ -665,6 +678,16 @@ const AccountsManager = ({ companyId, addToast }) => {
               <div>
                 <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Fecha de Vencimiento</label>
                 <input type="date" value={newDueDate} onChange={e => setNewDueDate(e.target.value)} required style={{ width: '100%' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Descripción / Glosa (Opcional)</label>
+                <textarea 
+                  placeholder="Ej: Cobro por mantención de vehículo patente XX1234" 
+                  value={newDescription} 
+                  onChange={e => setNewDescription(e.target.value)} 
+                  style={{ width: '100%', minHeight: '80px', padding: '12px', borderRadius: '8px', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border)', color: 'white', fontFamily: 'inherit' }}
+                />
               </div>
 
             </div>

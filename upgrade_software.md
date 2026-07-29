@@ -14,9 +14,6 @@ He analizado los requerimientos iniciales y las nuevas ideas para órdenes de tr
 ## 4. Cálculo de IVA en Factura de Compra
 - **Solución:** Se cambiará la columna a **Precio Neto (Sin IVA)**. Al ingresar los montos netos, el sistema calculará correctamente el **IVA (19%)** por separado y lo sumará al Neto para dar el **Total Gasto** final.
 
-## 5. Menú cortado (No aparecen "Cobros y Pagos" ni "RRHH")
-- **Solución:** Se habilitará una barra de desplazamiento (`overflow-y: auto`) en el menú lateral para que todos los ítems sean siempre accesibles sin importar el tamaño de la pantalla.
-
 ---
 
 ## 6. Roles en Órdenes de Trabajo (Diseño vs Producción)
