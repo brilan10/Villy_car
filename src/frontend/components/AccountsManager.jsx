@@ -910,7 +910,10 @@ const AccountsManager = ({ companyId, addToast }) => {
                       const dSaldo = dTotal - dAbono;
                       return (
                         <tr key={doc.id} style={{ borderBottom: '1px solid var(--border)', opacity: doc.estado === 'pagada' ? 0.6 : 1 }}>
-                          <td style={{ padding: '12px 16px', fontWeight: 600, color: 'white' }}>{doc.numero_documento || doc.id}</td>
+                          <td style={{ padding: '12px 16px', fontWeight: 600, color: 'white' }}>
+                            <div>{doc.numero_documento || doc.id}</div>
+                            {doc.descripcion && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px', fontWeight: 'normal' }}>{doc.descripcion}</div>}
+                          </td>
                           <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{doc.fecha_vencimiento}</td>
                           <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 500 }}>${dTotal.toLocaleString()}</td>
                           <td style={{ padding: '12px 16px', textAlign: 'right', color: 'var(--success)' }}>${dAbono.toLocaleString()}</td>
