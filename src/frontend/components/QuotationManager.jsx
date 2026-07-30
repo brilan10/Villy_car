@@ -353,8 +353,15 @@ const QuotationManager = ({ companyId, addToast }) => {
         alternateRowStyles: { fillColor: [250, 250, 250] },
       });
 
-      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : currentY + 30;
+      let finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : currentY + 30;
       
+      // Verify if there is enough space for the bottom section
+      const pageHeight = doc.internal.pageSize.height || 297;
+      if (finalY + 65 > pageHeight) {
+        doc.addPage();
+        finalY = 20; // Reset Y position for the new page
+      }
+
       // Bottom Section
       doc.setTextColor(themeColor[0], themeColor[1], themeColor[2]);
       doc.setFontSize(12);
