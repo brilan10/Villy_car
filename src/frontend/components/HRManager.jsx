@@ -415,11 +415,12 @@ const HRManager = ({ companyId, addToast }) => {
     const voluntaria = parseFloat(String(payrollInputs.cotizacion_voluntaria || '0').replace(',', '.')) || 0;
     const otrosDesc = parseFloat(String(payrollInputs.otros_descuentos || '0').replace(',', '.')) || 0;
     
-    const maxDeduct = Math.round(totalImponible * 0.3);
-    const valeDeduction = Math.min(workerDebt, maxDeduct);
+    const totalDescuentosSinAnticipos = afp + salud + cesantia + impuesto + voluntaria + otrosDesc;
+    const maxPossible = (totalImponible + totalNoImponible) - totalDescuentosSinAnticipos;
+    const valeDeduction = Math.min(workerDebt, maxPossible > 0 ? maxPossible : 0);
     const anticipos = valeDeduction;
     
-    const totalDescuentos = afp + salud + cesantia + impuesto + voluntaria + otrosDesc + anticipos;
+    const totalDescuentos = totalDescuentosSinAnticipos + anticipos;
     const net = (totalImponible + totalNoImponible) - totalDescuentos;
 
     setShowSlipModal({
@@ -592,11 +593,12 @@ const HRManager = ({ companyId, addToast }) => {
     const voluntaria = parseFloat(String(payrollInputs.cotizacion_voluntaria || '0').replace(',', '.')) || 0;
     const otrosDesc = parseFloat(String(payrollInputs.otros_descuentos || '0').replace(',', '.')) || 0;
 
-    const maxDeduct = Math.round(totalImponible * 0.3);
-    const valeDeduction = Math.min(workerDebt, maxDeduct);
+    const totalDescuentosSinAnticipos = afp + salud + cesantia + impuesto + voluntaria + otrosDesc;
+    const maxPossible = (totalImponible + totalNoImponible) - totalDescuentosSinAnticipos;
+    const valeDeduction = Math.min(workerDebt, maxPossible > 0 ? maxPossible : 0);
     const anticipos = valeDeduction;
 
-    const totalDescuentos = afp + salud + cesantia + impuesto + voluntaria + otrosDesc + anticipos;
+    const totalDescuentos = totalDescuentosSinAnticipos + anticipos;
     return (totalImponible + totalNoImponible) - totalDescuentos;
   };
 
