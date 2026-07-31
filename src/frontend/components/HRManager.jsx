@@ -416,8 +416,7 @@ const HRManager = ({ companyId, addToast }) => {
     const otrosDesc = parseFloat(String(payrollInputs.otros_descuentos || '0').replace(',', '.')) || 0;
     
     const totalDescuentosSinAnticipos = afp + salud + cesantia + impuesto + voluntaria + otrosDesc;
-    const maxPossible = (totalImponible + totalNoImponible) - totalDescuentosSinAnticipos;
-    const valeDeduction = Math.min(workerDebt, maxPossible > 0 ? maxPossible : 0);
+    const valeDeduction = workerDebt; // Allow full deduction even if negative
     const anticipos = valeDeduction;
     
     const totalDescuentos = totalDescuentosSinAnticipos + anticipos;
@@ -594,8 +593,7 @@ const HRManager = ({ companyId, addToast }) => {
     const otrosDesc = parseFloat(String(payrollInputs.otros_descuentos || '0').replace(',', '.')) || 0;
 
     const totalDescuentosSinAnticipos = afp + salud + cesantia + impuesto + voluntaria + otrosDesc;
-    const maxPossible = (totalImponible + totalNoImponible) - totalDescuentosSinAnticipos;
-    const valeDeduction = Math.min(workerDebt, maxPossible > 0 ? maxPossible : 0);
+    const valeDeduction = workerDebt; // Allow full deduction even if negative
     const anticipos = valeDeduction;
 
     const totalDescuentos = totalDescuentosSinAnticipos + anticipos;
