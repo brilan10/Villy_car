@@ -772,7 +772,7 @@ const HRManager = ({ companyId, addToast }) => {
               {consumosList.length === 0 ? (
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '16px' }}>No hay bebidas registradas pendientes de pago para este trabajador.</p>
               ) : (
-                <ul style={{ listStyle: 'none', padding: 0, marginTop: '16px' }}>
+                <ul style={{ listStyle: 'none', padding: 0, marginTop: '16px', maxHeight: '400px', overflowY: 'auto', paddingRight: '8px' }}>
                   {consumosList.map(c => (
                     <li key={c.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: 'var(--bg-main)', borderRadius: '8px', marginBottom: '8px' }}>
                       <span style={{ fontSize: '0.875rem' }}>{c.fecha} - {c.descripcion}</span>

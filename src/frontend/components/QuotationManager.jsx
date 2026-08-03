@@ -458,7 +458,7 @@ const QuotationManager = ({ companyId, addToast }) => {
           <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>No hay cotizaciones registradas.</div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
-            <div className="table-responsive">
+            <div className="table-responsive" style={{ maxHeight: '600px', overflowY: 'auto' }}>
 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-muted)' }}>
@@ -508,7 +508,7 @@ const QuotationManager = ({ companyId, addToast }) => {
 
       {showModal && (
         <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100vh', backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', overflowY: 'auto', zIndex: 1000, backdropFilter: 'blur(4px)', padding: '40px 20px' }}>
-          <div className="card animate-fade-in" style={{ maxWidth: '800px', width: '100%', margin: 'auto', position: 'relative', borderTop: '4px solid var(--accent)' }}>
+          <div className="card animate-fade-in" style={{ maxWidth: '800px', width: '100%', margin: '0 auto auto auto', position: 'relative', borderTop: '4px solid var(--accent)' }}>
             <button onClick={() => setShowModal(false)} style={{ position: 'absolute', top: '16px', right: '16px', color: 'var(--text-muted)' }}><X size={20} /></button>
             <h2 className="title-md" style={{ marginBottom: '24px' }}>{currentQuote.id ? 'Editar Cotización' : 'Nueva Cotización'}</h2>
             
@@ -599,7 +599,7 @@ const QuotationManager = ({ companyId, addToast }) => {
                 </div>
               </div>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '350px', overflowY: 'auto', paddingRight: '8px' }}>
                 {currentQuote.items.map((item, idx) => (
                   <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', backgroundColor: 'var(--bg-main)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
                     <div style={{ width: '80px' }}>
